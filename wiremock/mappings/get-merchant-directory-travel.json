@@ -1,0 +1,16 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/merchant-directory/4121"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "mcc": "4121",
+      "category": "Transportation"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

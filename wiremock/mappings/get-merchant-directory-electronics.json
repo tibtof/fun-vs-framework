@@ -1,0 +1,16 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/merchant-directory/5732"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "mcc": "5732",
+      "category": "Electronics"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

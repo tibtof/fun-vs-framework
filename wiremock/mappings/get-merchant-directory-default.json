@@ -1,0 +1,17 @@
+{
+  "priority": 10,
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/merchant-directory/.*"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "mcc": "0000",
+      "category": "Miscellaneous"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

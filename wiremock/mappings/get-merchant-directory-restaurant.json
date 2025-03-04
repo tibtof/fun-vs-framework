@@ -1,0 +1,16 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/merchant-directory/5812"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "mcc": "5812",
+      "category": "Restaurants"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/merchant-directory/3010"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "mcc": "5411",
+      "category": "Airlines"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+@clientId=123e4567-e89b-12d3-a456-426614174000
+
+### GET request to example server
+GET http://localhost:8090/merchant-directory/5411
+
+<> 2025-03-04T110056.200.json
+<> 2025-03-04T110005.200.json
+<> 2025-03-04T105949.200.json
+<> 2025-03-04T105932.200.json
+
+
+###
+GET http://localhost:8080/client/{{clientId}}/categories
+
+###
+GET http://localhost:8080/client/{{clientId}}/categories-budget
+
+<> 2025-03-04T111637.500.json
+
+###
+GET http://localhost:8080/client/{{clientId}}/transactions?category=Groceries
+
+<> 2025-03-04T110235.200.json
+<> 2025-03-04T110155.400.json
+<> 2025-03-04T110135.200.json
+<> 2025-03-04T110059.200.json
+<> 2025-03-04T105645.200.json
+<> 2025-03-04T105342.500.json
+<> 2025-03-04T105334.404.json
+<> 2025-03-04T105230.404.json
+<> 2025-03-03T171455.200.json
+<> 2025-03-03T171234.200.json
+###
