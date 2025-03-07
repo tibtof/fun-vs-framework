@@ -22,6 +22,7 @@ public record Transaction(
         Amount amount,
         MerchantCategoryCode mcc
 ) {
+
     public Transaction {
         Objects.requireNonNull(transactionId, "Transaction ID cannot be null");
         Objects.requireNonNull(clientId, "Client ID cannot be null");
