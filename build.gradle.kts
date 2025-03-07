@@ -35,6 +35,7 @@ dependencies {
     testImplementation("org.wiremock.integrations.testcontainers:wiremock-testcontainers-module:1.0-alpha-14")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.mockito:mockito-core:5.16.0")
+    testImplementation("com.tngtech.archunit:archunit:1.4.0")
 }
 
 dependencyManagement {
