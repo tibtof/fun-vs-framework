@@ -13,7 +13,7 @@ import org.wiremock.integrations.testcontainers.WireMockContainer;
 @Import(TestcontainersConfiguration.class)
 @Testcontainers
 @SpringBootTest
-class TransactionCategorizationApplicationIT {
+class TransactionCategorizerApplicationIT {
 
     @Container
     static WireMockContainer wireMockContainer = new WireMockContainer("wiremock/wiremock:3.12.0")

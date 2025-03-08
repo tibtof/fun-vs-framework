@@ -1,7 +1,7 @@
-package fun.vs.fw.demo.service;
+package fun.vs.fw.demo.merchantdirectory;
 
 /**
- * Represents information about a merchant, including the merchant category code (MCC)
+ * Represents information about a merchant, including the merchant category value (MCC)
  * and the associated category.
  * <p>
  * This record is used to encapsulate details about a specific merchant for categorization
