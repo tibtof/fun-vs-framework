@@ -19,9 +19,8 @@ import java.math.BigDecimal;
  * This class is marked as a JPA entity and mapped to the "categorized_transaction" table
  * in the database.
  */
-@Entity
 @Table(name = "categorized_transaction")
-public class CategorizedTransactionEntity {
+@Entity public class CategorizedTransactionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

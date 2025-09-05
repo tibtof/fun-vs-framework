@@ -1,8 +1,8 @@
 package fun.vs.fw.demo.domain;
 
 
-import fun.vs.fw.demo.domain.CategorizedTransactionRepository.FindByTransactionId;
-import fun.vs.fw.demo.domain.CategorizedTransactionRepository.SaveCategorizedTransaction;
+import fun.vs.fw.demo.domain.CategorizedTransactionPorts.FindByTransactionId;
+import fun.vs.fw.demo.domain.CategorizedTransactionPorts.SaveCategorizedTransaction;
 
 public class TransactionCategorizer {
 
@@ -10,7 +10,10 @@ public class TransactionCategorizer {
     private final FindByTransactionId findByTransactionId;
     private final MerchantDirectory merchantDirectory;
 
-    public TransactionCategorizer(SaveCategorizedTransaction saveCategorizedTransaction, FindByTransactionId findByTransactionId, MerchantDirectory merchantDirectory) {
+    public TransactionCategorizer(
+            SaveCategorizedTransaction saveCategorizedTransaction,
+            FindByTransactionId findByTransactionId,
+            MerchantDirectory merchantDirectory) {
         this.saveCategorizedTransaction = saveCategorizedTransaction;
         this.findByTransactionId = findByTransactionId;
         this.merchantDirectory = merchantDirectory;

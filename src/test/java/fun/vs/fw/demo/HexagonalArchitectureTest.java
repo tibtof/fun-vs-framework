@@ -15,21 +15,22 @@ public class HexagonalArchitectureTest {
     @Test
     void domainShouldNotDependOnOtherModules() {
         ArchRuleDefinition.noClasses()
-                .that().resideInAPackage("fun.vs.fw.demo.domain..")
+                .that().resideInAPackage("..domain..")
                 .should().dependOnClassesThat().resideInAnyPackage(
-                        "fun.vs.fw.demo.config..",
-                        "fun.vs.fw.demo.controller..",
-                        "fun.vs.fw.demo.jpa..",
-                        "fun.vs.fw.demo.kafka..",
-                        "fun.vs.fw.demo.merchantdirectory..")
+                        "..config..",
+                        "..controller..",
+                        "..jpa..",
+                        "..kafka..",
+                        "..merchantdirectory..")
                 .check(importedClasses);
     }
 
     @Test
     void domainShouldNotDependOnSpringFramework() {
         ArchRuleDefinition.noClasses()
-                .that().resideInAPackage("fun.vs.fw.demo.domain..")
-                .should().dependOnClassesThat().resideInAnyPackage("org.springframework..")
+                .that().resideInAPackage("..domain..")
+                .should().dependOnClassesThat()
+                .resideInAnyPackage("org.springframework..")
                 .check(importedClasses);
     }
 

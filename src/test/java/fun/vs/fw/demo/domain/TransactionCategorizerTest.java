@@ -26,18 +26,18 @@ class TransactionCategorizerTest {
      */
     @DisplayName("Should categorize new transactions correctly")
     @Test
-    void should_toCategorizedTransaction_new_transactions() {
+    void should_categorized_new_transactions() {
         final var transaction = createSampleTransaction();
-        final var service = new TransactionCategorizer(
-                (categorizedTransaction) -> categorizedTransaction.withId(
-                        new CategorizedTransactionId(1L)),
+        final var categorizedTransactionId = new CategorizedTransactionId(1L);
+        final var transactionCategorizer = new TransactionCategorizer(
+                (categorizedTransaction) -> categorizedTransaction.withId(categorizedTransactionId),
                 (transactionId) -> Optional.empty(),
                 (mcc) -> new ExpenseCategory("Transportation")
         );
 
-        final var result = service.categorize(transaction);
+        final var result = transactionCategorizer.categorize(transaction);
 
-        Assertions.assertEquals(1L, result.id().value());
+        Assertions.assertEquals(categorizedTransactionId, result.id());
         Assertions.assertEquals(transaction.transactionId(), result.transactionId());
         Assertions.assertEquals("Transportation", result.expenseCategory().value());
     }

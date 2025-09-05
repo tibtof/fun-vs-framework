@@ -6,6 +6,15 @@ import fun.vs.fw.demo.domain.CategorizedTransaction.ExpenseCategory;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+
+record Transaction1(
+        String transactionId,
+        String clientId,
+        String accountId,
+        BigDecimal amount,
+        String mcc
+) {}
+
 public record Transaction(
         TransactionId transactionId,
         ClientId clientId,
@@ -13,7 +22,6 @@ public record Transaction(
         Amount amount,
         MerchantCategoryCode mcc
 ) {
-
     public Transaction {
         Objects.requireNonNull(transactionId, "Transaction ID cannot be null");
         Objects.requireNonNull(clientId, "Client ID cannot be null");

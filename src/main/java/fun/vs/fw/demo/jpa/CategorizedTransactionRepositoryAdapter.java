@@ -3,7 +3,7 @@ package fun.vs.fw.demo.jpa;
 
 import fun.vs.fw.demo.domain.CategorizedTransaction;
 import fun.vs.fw.demo.domain.CategorizedTransaction.ExpenseCategory;
-import fun.vs.fw.demo.domain.CategorizedTransactionRepository;
+import fun.vs.fw.demo.domain.CategorizedTransactionPorts.*;
 import fun.vs.fw.demo.domain.CategoryBudget;
 import fun.vs.fw.demo.domain.Transaction;
 import fun.vs.fw.demo.domain.Transaction.ClientId;
@@ -14,11 +14,11 @@ import java.util.Optional;
 
 @Service
 public class CategorizedTransactionRepositoryAdapter implements
-        CategorizedTransactionRepository.SaveCategorizedTransaction,
-        CategorizedTransactionRepository.FindByTransactionId,
-        CategorizedTransactionRepository.FindBudgetsByCategory,
-        CategorizedTransactionRepository.FindByClientIdAndExpenseCategory,
-        CategorizedTransactionRepository.FindExpenseCategoriesByClient {
+        SaveCategorizedTransaction,
+        FindByTransactionId,
+        FindBudgetsByCategory,
+        FindByClientIdAndExpenseCategory,
+        FindExpenseCategoriesByClient {
 
     private final CategorizedTransactionJpaRepository jpaRepository;
 

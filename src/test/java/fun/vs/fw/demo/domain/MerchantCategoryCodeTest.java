@@ -4,6 +4,8 @@ import fun.vs.fw.demo.domain.Transaction.MerchantCategoryCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -32,6 +34,12 @@ class MerchantCategoryCodeTest {
             new MerchantCategoryCode("12A4");
         });
         assertEquals("Merchant category code must be exactly 4 digits", exception.getMessage());
+
+        new Transaction1("tx12345",
+                "client6789",
+                "acc98765",
+                new BigDecimal("250.75"),
+                "1234");
     }
 
     @DisplayName("Should throw IllegalArgumentException when code is less than 4 digits")

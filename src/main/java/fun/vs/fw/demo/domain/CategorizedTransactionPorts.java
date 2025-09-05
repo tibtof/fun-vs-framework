@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface CategorizedTransactionRepository {
+public interface CategorizedTransactionPorts {
 
     @FunctionalInterface
     interface SaveCategorizedTransaction {
@@ -35,4 +35,10 @@ public interface CategorizedTransactionRepository {
     interface FindExpenseCategoriesByClient {
         List<ExpenseCategory> findExpenseCategoriesBy(ClientId clientId);
     }
+
+    interface CategorizedTransactionRepository extends SaveCategorizedTransaction,
+            FindByTransactionId,
+            FindByClientIdAndExpenseCategory,
+            FindBudgetsByCategory,
+            FindExpenseCategoriesByClient {}
 }
