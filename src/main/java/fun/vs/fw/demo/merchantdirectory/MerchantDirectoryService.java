@@ -1,4 +1,4 @@
-package fun.vs.fw.demo.service;
+package fun.vs.fw.demo.merchantdirectory;
 
 
 import org.springframework.cloud.openfeign.FeignClient;

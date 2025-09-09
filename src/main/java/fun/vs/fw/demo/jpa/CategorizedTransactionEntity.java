@@ -1,5 +1,12 @@
-package fun.vs.fw.demo.repository;
+package fun.vs.fw.demo.jpa;
 
+import fun.vs.fw.demo.domain.CategorizedTransaction;
+import fun.vs.fw.demo.domain.CategorizedTransaction.CategorizedTransactionId;
+import fun.vs.fw.demo.domain.CategorizedTransaction.ExpenseCategory;
+import fun.vs.fw.demo.domain.Transaction.AccountId;
+import fun.vs.fw.demo.domain.Transaction.ClientId;
+import fun.vs.fw.demo.domain.Transaction.Amount;
+import fun.vs.fw.demo.domain.Transaction.TransactionId;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -12,9 +19,8 @@ import java.math.BigDecimal;
  * This class is marked as a JPA entity and mapped to the "categorized_transaction" table
  * in the database.
  */
-@Entity
 @Table(name = "categorized_transaction")
-public class CategorizedTransaction {
+@Entity public class CategorizedTransactionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,20 +41,42 @@ public class CategorizedTransaction {
     @Column(name = "expense_category", nullable = false)
     private String expenseCategory;
 
-    public CategorizedTransaction() {
+    public CategorizedTransactionEntity() {
     }
 
-    public CategorizedTransaction(Long id, String transactionId, String clientId, String accountId, BigDecimal amount, String expenseCategory) {
+    public CategorizedTransactionEntity(Long id, String transactionId, String clientId, String accountId, BigDecimal amount, String expenseCategory) {
         this(transactionId, clientId, accountId, amount, expenseCategory);
         this.id = id;
     }
 
-    public CategorizedTransaction(String transactionId, String clientId, String accountId, BigDecimal amount, String expenseCategory) {
+    public CategorizedTransactionEntity(String transactionId, String clientId, String accountId, BigDecimal amount, String expenseCategory) {
         this.transactionId = transactionId;
         this.clientId = clientId;
         this.accountId = accountId;
         this.amount = amount;
         this.expenseCategory = expenseCategory;
+    }
+
+    public static CategorizedTransactionEntity valueOf(CategorizedTransaction categorizedTransaction) {
+        return new CategorizedTransactionEntity(
+                categorizedTransaction.id().value(),
+                categorizedTransaction.transactionId().value(),
+                categorizedTransaction.clientId().value(),
+                categorizedTransaction.accountId().value(),
+                categorizedTransaction.amount().value(),
+                categorizedTransaction.expenseCategory().value()
+        );
+    }
+
+    public CategorizedTransaction toDomain() {
+        return new CategorizedTransaction(
+                new CategorizedTransactionId(id),
+                new TransactionId(transactionId),
+                new ClientId(clientId),
+                new AccountId(accountId),
+                new Amount(amount),
+                new ExpenseCategory(expenseCategory)
+        );
     }
 
     public Long getId() {
