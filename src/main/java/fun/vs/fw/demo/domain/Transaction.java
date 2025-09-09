@@ -7,13 +7,6 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 
-record Transaction1(
-        String transactionId,
-        String clientId,
-        String accountId,
-        BigDecimal amount,
-        String mcc
-) {}
 
 public record Transaction(
         TransactionId transactionId,
