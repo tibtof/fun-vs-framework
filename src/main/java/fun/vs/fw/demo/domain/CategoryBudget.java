@@ -1,4 +1,4 @@
-package fun.vs.fw.demo.repository;
+package fun.vs.fw.demo.domain;
 
 
 import java.math.BigDecimal;
