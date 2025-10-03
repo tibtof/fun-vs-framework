@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 
-
 public record Transaction(
         TransactionId transactionId,
         ClientId clientId,
@@ -50,6 +49,11 @@ public record Transaction(
                 throw new IllegalArgumentException("Transaction ID cannot be null or blank");
             }
         }
+
+        // concise modern factory
+        public static TransactionId of(String id) {
+            return new TransactionId(id);
+        }
     }
 
     public record ClientId(String value) {
@@ -58,6 +62,11 @@ public record Transaction(
             if (value.isBlank()) {
                 throw new IllegalArgumentException("Client ID cannot be null or blank");
             }
+        }
+
+        // concise modern factory
+        public static ClientId of(String id) {
+            return new ClientId(id);
         }
     }
 
@@ -68,11 +77,21 @@ public record Transaction(
                 throw new IllegalArgumentException("Account ID cannot be null or blank");
             }
         }
+
+        // concise factory
+        public static AccountId of(String id) {
+            return new AccountId(id);
+        }
     }
 
     public record Amount(BigDecimal value) {
         public Amount {
             Objects.requireNonNull(value, "Amount cannot be null");
+        }
+
+        // concise factory
+        public static Amount of(BigDecimal value) {
+            return new Amount(value);
         }
     }
 
@@ -82,6 +101,11 @@ public record Transaction(
             if (!value.matches("\\d{4}")) {
                 throw new IllegalArgumentException("Merchant category code must be exactly 4 digits");
             }
+        }
+
+        // concise factory
+        public static MerchantCategoryCode of(String value) {
+            return new MerchantCategoryCode(value);
         }
     }
 }

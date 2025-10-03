@@ -1,11 +1,14 @@
 package fun.vs.fw.demo.domain;
 
+import fun.vs.fw.demo.domain.Transaction.ClientId;
 import fun.vs.fw.demo.domain.Transaction.MerchantCategoryCode;
+import fun.vs.fw.demo.domain.Transaction.TransactionId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
+import static fun.vs.fw.demo.domain.Transaction.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -35,11 +38,11 @@ class MerchantCategoryCodeTest {
         });
         assertEquals("Merchant category code must be exactly 4 digits", exception.getMessage());
 
-        new Transaction1("tx12345",
-                "client6789",
-                "acc98765",
-                new BigDecimal("250.75"),
-                "1234");
+        new Transaction(TransactionId.of("tx12345"),
+                ClientId.of("client6789"),
+                AccountId.of("acc98765"),
+                Amount.of(new BigDecimal("250.75")),
+                MerchantCategoryCode.of("1234"));
     }
 
     @DisplayName("Should throw IllegalArgumentException when code is less than 4 digits")

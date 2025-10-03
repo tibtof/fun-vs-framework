@@ -29,7 +29,7 @@ class TransactionCategorizerTest {
     void should_categorized_new_transactions() {
         final var transaction = createSampleTransaction();
         final var categorizedTransactionId = new CategorizedTransactionId(1L);
-        final var transactionCategorizer = new TransactionCategorizer(
+        final var transactionCategorizer = TransactionCategorizer.create(
                 (categorizedTransaction) -> categorizedTransaction.withId(categorizedTransactionId),
                 (transactionId) -> Optional.empty(),
                 (mcc) -> new ExpenseCategory("Transportation")
@@ -62,7 +62,7 @@ class TransactionCategorizerTest {
         final var existingTransaction = transaction
                 .toCategorizedTransaction(new ExpenseCategory("Transportation"))
                 .withId(new CategorizedTransactionId(1L));
-        final var service = new TransactionCategorizer(
+        final var service = TransactionCategorizer.create(
                 (categorizedTransaction) ->
                         categorizedTransaction.withId(new CategorizedTransactionId(1L)),
                 (transactionId) -> Optional.of(existingTransaction),
