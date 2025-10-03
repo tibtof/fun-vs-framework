@@ -26,6 +26,10 @@ import java.math.BigDecimal;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Version
+    @Column(name = "version")
+    private Long version;
+
     @Column(name = "transaction_id", unique = true, nullable = false)
     private String transactionId;
 
@@ -85,6 +89,14 @@ import java.math.BigDecimal;
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public String getTransactionId() {

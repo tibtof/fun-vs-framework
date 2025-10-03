@@ -4,13 +4,24 @@ package fun.vs.fw.demo.domain;
 import fun.vs.fw.demo.domain.CategorizedTransactionPorts.FindByTransactionId;
 import fun.vs.fw.demo.domain.CategorizedTransactionPorts.SaveCategorizedTransaction;
 
-public class TransactionCategorizer {
+public interface TransactionCategorizer {
+
+    CategorizedTransaction categorize(Transaction transaction);
+
+    static TransactionCategorizer create(SaveCategorizedTransaction saveCategorizedTransaction,
+                                         FindByTransactionId findByTransactionId,
+                                         MerchantDirectory merchantDirectory) {
+        return new TransactionCategorizerService(saveCategorizedTransaction, findByTransactionId, merchantDirectory);
+    }
+}
+
+final class TransactionCategorizerService implements TransactionCategorizer {
 
     private final SaveCategorizedTransaction saveCategorizedTransaction;
     private final FindByTransactionId findByTransactionId;
     private final MerchantDirectory merchantDirectory;
 
-    public TransactionCategorizer(
+    TransactionCategorizerService(
             SaveCategorizedTransaction saveCategorizedTransaction,
             FindByTransactionId findByTransactionId,
             MerchantDirectory merchantDirectory) {
