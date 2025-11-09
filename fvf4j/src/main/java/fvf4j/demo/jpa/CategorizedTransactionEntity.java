@@ -3,9 +3,10 @@ package fvf4j.demo.jpa;
 import fvf4j.demo.domain.CategorizedTransaction;
 import fvf4j.demo.domain.CategorizedTransaction.CategorizedTransactionId;
 import fvf4j.demo.domain.CategorizedTransaction.ExpenseCategory;
+import fvf4j.demo.domain.Transaction;
 import fvf4j.demo.domain.Transaction.AccountId;
-import fvf4j.demo.domain.Transaction.ClientId;
 import fvf4j.demo.domain.Transaction.Amount;
+import fvf4j.demo.domain.Transaction.ClientId;
 import fvf4j.demo.domain.Transaction.TransactionId;
 import jakarta.persistence.*;
 
@@ -20,7 +21,8 @@ import java.math.BigDecimal;
  * in the database.
  */
 @Table(name = "categorized_transaction")
-@Entity public class CategorizedTransactionEntity {
+@Entity
+public class CategorizedTransactionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,55 +89,27 @@ import java.math.BigDecimal;
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getVersion() {
         return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     public String getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
-    }
-
     public String getClientId() {
         return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
     }
 
     public String getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
-
     public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
     public String getExpenseCategory() {
         return expenseCategory;
-    }
-
-    public void setExpenseCategory(String expenseCategory) {
-        this.expenseCategory = expenseCategory;
     }
 }

@@ -5,8 +5,8 @@ import fvf4j.demo.domain.CategorizedTransaction;
 import fvf4j.demo.domain.CategorizedTransaction.ExpenseCategory;
 import fvf4j.demo.domain.CategorizedTransactionPorts.*;
 import fvf4j.demo.domain.CategoryBudget;
-import fvf4j.demo.domain.Transaction;
 import fvf4j.demo.domain.Transaction.ClientId;
+import fvf4j.demo.domain.Transaction.TransactionId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class CategorizedTransactionRepositoryAdapter implements
     }
 
     @Override
-    public Optional<CategorizedTransaction> findBy(Transaction.TransactionId transactionId) {
+    public Optional<CategorizedTransaction> findBy(TransactionId transactionId) {
         return jpaRepository.findByTransactionId(transactionId.value())
                 .map(CategorizedTransactionEntity::toDomain);
     }

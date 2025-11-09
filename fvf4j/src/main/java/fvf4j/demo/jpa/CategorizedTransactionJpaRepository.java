@@ -2,8 +2,10 @@ package fvf4j.demo.jpa;
 
 
 import fvf4j.demo.domain.CategoryBudget;
+import fvf4j.demo.domain.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,12 +24,12 @@ public interface CategorizedTransactionJpaRepository extends JpaRepository<Categ
     List<CategorizedTransactionEntity> findByClientIdAndExpenseCategory(String clientId, String expenseCategory);
 
     @Query("""
-            SELECT t.expenseCategory as category, SUM(t.amount) as totalAmount
+            SELECT new fvf4j.demo.domain.CategoryBudget(t.expenseCategory, SUM(t.amount))
             FROM CategorizedTransactionEntity t
             WHERE t.clientId = :clientId
             GROUP BY t.expenseCategory
             """)
-    List<CategoryBudget> findBudgetsByCategory(String clientId);
+    List<CategoryBudget> findBudgetsByCategory(@Param("clientId") String clientId);
 
 
     @Query("""
@@ -35,5 +37,5 @@ public interface CategorizedTransactionJpaRepository extends JpaRepository<Categ
             FROM CategorizedTransactionEntity t
             WHERE t.clientId = :clientId
             """)
-    List<String> findDistinctExpenseCategoriesByClientId(String clientId);
+    List<String> findDistinctExpenseCategoriesByClientId(@Param("clientId") String clientId);
 }

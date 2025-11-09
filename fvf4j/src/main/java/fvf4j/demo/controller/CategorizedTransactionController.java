@@ -28,20 +28,20 @@ public class CategorizedTransactionController<R extends
 
     @GetMapping("/client/{clientId}/transactions")
     public List<CategorizedTransactionResponse> getTransactionsByClientAndCategory(
-            @PathVariable String clientId,
-            @RequestParam String category) {
-        return repository.findBy(new ClientId(clientId), new ExpenseCategory(category))
+            @PathVariable ClientId clientId,
+            @RequestParam ExpenseCategory category) {
+        return repository.findBy(clientId, category)
                 .stream().map(CategorizedTransactionResponse::valueOf).toList();
     }
 
     @GetMapping("/client/{clientId}/categories-budget")
-    public List<CategoryBudget> getBudgetByCategory(@PathVariable String clientId) {
-        return repository.findBudgetsByCategory(new ClientId(clientId));
+    public List<CategoryBudget> getBudgetByCategory(@PathVariable ClientId clientId) {
+        return repository.findBudgetsByCategory(clientId);
     }
 
     @GetMapping("/client/{clientId}/categories")
-    public List<String> getDistinctExpenseCategoriesByClientId(@PathVariable String clientId) {
-        return repository.findExpenseCategoriesBy(new ClientId(clientId))
+    public List<String> getDistinctExpenseCategoriesByClientId(@PathVariable ClientId clientId) {
+        return repository.findExpenseCategoriesBy(clientId)
                 .stream().map(ExpenseCategory::value).toList();
     }
 }
