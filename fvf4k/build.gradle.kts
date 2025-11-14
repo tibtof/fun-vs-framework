@@ -1,10 +1,11 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+val kotlinLoggingVersion: String by project
 val springCloudVersion: String by project
 val postgresqlVersion: String by project
+val konsistVersion: String by project
+val arrowVersion: String by project
 val wiremockTestcontainersVersion: String by project
-val mockitoCoreVersion: String by project
-val archunitVersion: String by project
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
@@ -20,6 +21,8 @@ kotlin {
     jvmToolchain(25)
     compilerOptions {
         jvmTarget = JvmTarget.JVM_24
+        freeCompilerArgs.add("-Xcontext-parameters")
+        freeCompilerArgs.add("-opt-in=kotlin.uuid.ExperimentalUuidApi")
     }
 }
 
@@ -33,9 +36,15 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.springframework.kafka:spring-kafka")
     implementation("org.postgresql:postgresql:$postgresqlVersion")
-    implementation(kotlin("reflect"))
+
+//    implementation(kotlin("reflect"))
+    implementation("io.github.oshai:kotlin-logging-jvm:$kotlinLoggingVersion")
+    implementation("io.arrow-kt:arrow-core:$arrowVersion")
+    implementation("io.arrow-kt:arrow-core-high-arity:$arrowVersion")
+    implementation("io.arrow-kt:arrow-fx-coroutines:$arrowVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("com.lemonappdev:konsist:$konsistVersion")
 }
 
 dependencyManagement {
