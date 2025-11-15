@@ -6,8 +6,8 @@ import fvf4k.demo.domain.InvalidMerchantCategoryPattern
 import fvf4k.demo.domain.NullMerchantCategoryCode
 import fvf4k.demo.domain.NullOrEmpty
 import fvf4k.demo.domain.ValidationError
-import fvf4k.demo.domain.model.MerchantCategoryCode.Companion.MCC_PATTERN
 import java.math.BigDecimal
+import kotlin.uuid.Uuid
 
 
 data class Transaction(
@@ -48,7 +48,7 @@ data class Transaction(
     }
 }
 
-@JvmInline value class TransactionId private constructor(val value: String) {
+@JvmInline value class TransactionId(val value: Uuid) {
     companion object {
         context(_: Raise<ValidationError>)
         operator fun invoke(value: String?): TransactionId {
@@ -60,26 +60,13 @@ data class Transaction(
 
 @JvmInline value class MerchantCategoryCode private constructor(val value: String) {
     companion object {
+        private val MCC_PATTERN = Regex("^\\d{4}$")
 
-        /**
-         * Smart constructor that validates the value of [MerchantCategoryCode]
-         */
-//        context(_: Raise<ValidationError>)
-//        operator fun invoke(value: String?): MerchantCategoryCode =
-//            when {
-//                value == null -> raise(NullMerchantCategoryCode)
-//                !MCC_PATTERN.matches(value) -> raise(InvalidMerchantCategoryPattern)
-//                else -> MerchantCategoryCode(value)
-//            }
-//    }
+        context(_: Raise<ValidationError>)
+        operator fun invoke(value: String?): MerchantCategoryCode = when {
+            value == null -> raise(NullMerchantCategoryCode)
+            MCC_PATTERN.matches(value) -> raise(InvalidMerchantCategoryPattern(value))
+            else -> MerchantCategoryCode(value)
+        }
     }
-}
-
-private val MCC_PATTERN = Regex("^\\d{4}$")
-
-context(_: Raise<ValidationError>)
-fun MerchantCategoryCode(value: String?): MerchantCategoryCode = when {
-    value == null -> raise(NullMerchantCategoryCode)
-    !MCC_PATTERN.matches(value) -> raise(InvalidMerchantCategoryPattern)
-    else -> MerchantCategoryCode(value)
 }

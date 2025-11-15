@@ -18,7 +18,7 @@ data class CategorizedTransaction(
     }
 }
 
-@JvmInline value class ExpenseCategory private constructor(val value: String?) {
+@JvmInline value class ExpenseCategory private constructor(val value: String) {
     companion object {
         context(_: Raise<ValidationError>)
         operator fun invoke(value: String?): ExpenseCategory {
@@ -27,3 +27,4 @@ data class CategorizedTransaction(
         }
     }
 }
+

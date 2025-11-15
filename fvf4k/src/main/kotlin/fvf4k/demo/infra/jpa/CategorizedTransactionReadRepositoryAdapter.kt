@@ -5,6 +5,7 @@ import arrow.core.raise.context.Raise
 import arrow.core.raise.context.raise
 import fvf4k.demo.domain.CategoryBudget
 import fvf4k.demo.domain.DatabaseQueryError
+import fvf4k.demo.domain.DatabaseQueryFailedError
 import fvf4k.demo.domain.model.CategorizedTransaction
 import fvf4k.demo.domain.model.ClientId
 import fvf4k.demo.domain.model.ExpenseCategory
@@ -28,7 +29,7 @@ class CategorizedTransactionReadRepositoryAdapter(
             },
             catch = { exception ->
                 raise(
-                    DatabaseQueryError(
+                    DatabaseQueryFailedError(
                         "could not execute query by transaction id. " +
                                 "id='$transactionId' cause: ${exception.message}"
                     )
@@ -43,12 +44,16 @@ class CategorizedTransactionReadRepositoryAdapter(
     ): List<CategorizedTransaction> =
         catch(
             block = {
-                jpaRepository.findBudgetsByCategory(clientId, expenseCategory)
+                jpaRepository.findByClientIdAndExpenseCategory(clientId, expenseCategory)
+                    .map {
+                        it.toDomain() }
             },
             catch = { exception ->
                 raise(
-                    DatabaseQueryError(
-                        "could not execute query by transaction id. id='$transactionId' cause: ${exception.message}"
+                    DatabaseQueryFailedError(
+                        "could not execute query by clientId and expenseCategory. " +
+                                "clientId='$clientId', expenseCategory='$expenseCategory' " +
+                                "cause: ${exception.message}"
                     )
                 )
             }
@@ -62,7 +67,7 @@ class CategorizedTransactionReadRepositoryAdapter(
             },
             catch = { exception ->
                 raise(
-                    DatabaseQueryError(
+                    DatabaseQueryFailedError(
                         "could not execute query by category for clientId, cause: ${exception.message}"
                     )
                 )

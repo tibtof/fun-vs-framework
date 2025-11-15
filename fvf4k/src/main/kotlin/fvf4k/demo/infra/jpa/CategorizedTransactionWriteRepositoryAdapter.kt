@@ -18,7 +18,7 @@ class CategorizedTransactionWriteRepositoryAdapter(
     override fun insert(transaction: CategorizedTransaction): CategorizedTransaction =
         catch(
             block = {
-                jpaRepository.save(transaction.toEntity()).toDomain()
+                jpaRepository.save(transaction.toJpaEntity()).toDomain()
             },
             catch = {
                 raise(DatabaseUpdateError("could not insert transaction category: ${it.message}"))
@@ -29,7 +29,7 @@ class CategorizedTransactionWriteRepositoryAdapter(
     override fun update(transaction: CategorizedTransaction): CategorizedTransaction =
         catch(
             block = {
-                jpaRepository.save(transaction.toEntity()).toDomain()
+                jpaRepository.save(transaction.toJpaEntity()).toDomain()
             },
             catch = {
                 raise(DatabaseUpdateError("could not update transaction category: ${it.message}"))

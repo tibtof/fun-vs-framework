@@ -1,4 +1,4 @@
-package fvf4k.demo.web
+package fvf4k.demo.infra.web
 
 import arrow.core.Nel
 import arrow.core.raise.context.Raise
