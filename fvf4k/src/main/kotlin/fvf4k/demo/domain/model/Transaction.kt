@@ -65,7 +65,7 @@ data class Transaction(
         context(_: Raise<ValidationError>)
         operator fun invoke(value: String?): MerchantCategoryCode = when {
             value == null -> raise(NullMerchantCategoryCode)
-            MCC_PATTERN.matches(value) -> raise(InvalidMerchantCategoryPattern(value))
+            !MCC_PATTERN.matches(value) -> raise(InvalidMerchantCategoryPattern(value))
             else -> MerchantCategoryCode(value)
         }
     }

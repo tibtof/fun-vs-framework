@@ -27,7 +27,7 @@ public class TransactionKafkaListener {
      * @param message The message received from the "transactions" Kafka topic. This contains details
      *                like message ID, account ID, client ID, merchant category value (MCC), and the message amount.
      */
-    @KafkaListener(topics = "transactions", groupId = "transactions-group")
+    @KafkaListener(topics = "transactions", groupId = "fvf4j-transactions-group")
     public void listen(TransactionMessage message) {
         log.info("Received message: {}", message);
         categorizationService.categorize(message.toTransaction());

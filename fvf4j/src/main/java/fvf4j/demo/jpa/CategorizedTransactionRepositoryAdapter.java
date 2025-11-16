@@ -58,6 +58,6 @@ public class CategorizedTransactionRepositoryAdapter implements
 
     @Override
     public List<CategoryBudget> findBudgetsByCategory(ClientId clientId) {
-        return jpaRepository.findBudgetsByCategory(clientId.value());
+        return jpaRepository.findBudgetsGroupedByCategory(clientId.value());
     }
 }

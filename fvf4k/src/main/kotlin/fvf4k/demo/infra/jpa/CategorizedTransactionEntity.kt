@@ -18,6 +18,8 @@ import fvf4k.demo.domain.model.Transaction
 import fvf4k.demo.domain.model.TransactionId
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.math.BigDecimal
@@ -31,7 +33,7 @@ import arrow.core.raise.zipOrAccumulate as zipOrAccumulateExt
 @Table(name = "categorized_transaction")
 @Entity
 data class CategorizedTransactionEntity(
-    @Id val id: UUID,
+    @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID,
     @Column(name = "transaction_id", nullable = false) val transactionId: UUID,
     @Column(name = "client_id", nullable = false) val clientId: String,
     @Column(name = "account_id", nullable = false) val accountId: String,

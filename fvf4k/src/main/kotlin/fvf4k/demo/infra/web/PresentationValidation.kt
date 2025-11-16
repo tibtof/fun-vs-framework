@@ -1,17 +1,19 @@
 package fvf4k.demo.infra.web
 
 import arrow.core.Nel
+import arrow.core.nel
 import arrow.core.raise.context.Raise
 import arrow.core.raise.context.raise
 import arrow.core.raise.fold
 import fvf4k.demo.domain.DatabaseQueryError
 import fvf4k.demo.domain.ValidationError
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-private val logger = LoggerFactory.getLogger("WebOperationFailure")
+private val logger = KotlinLogging.logger {}
 
 sealed interface WebOperationFailure {
     val httpStatus: HttpStatus
@@ -44,27 +46,30 @@ data class ErrorResponse @OptIn(ExperimentalTime::class) constructor(
     val details: List<String> = emptyList()
 )
 
-private fun WebOperationFailure.logError(requestPath: String? = null) {
+fun <A> (Raise<WebOperationFailure>.() -> A).toResponseEntity(): ResponseEntity<*> =
+    fold(
+        transform = { ResponseEntity.ok(it) },
+        recover = { e ->
+            e.logError()
+            e.toResponseEntity()
+        }
+    )
+
+fun WebOperationFailure.logError(requestPath: String? = null) {
     val pathInfo = requestPath?.let { " [path=$it]" } ?: ""
 
     when (this) {
         is InvalidInput -> {
-            // Client errors = WARN level (not our fault)
-            logger.error(
-                "Validation error{}:\n{}",
-                pathInfo,
-                errors.map { "  - ${it.message}" }.joinToString("\n")
-            )
+            logger.error {
+                val message = errors.map { "  - ${it.message}" }.joinToString("\n")
+                "Invalid input for http request on $pathInfo: $message"
+            }
         }
 
         is ServiceUnavailable -> {
-            // Server errors = ERROR level (our fault)
-            logger.error(
-                "Service unavailable error{}: {} (type: {})",
-                pathInfo,
-                error.message,
-                error::class.simpleName
-            )
+            logger.error {
+                "Service unavailable error for $pathInfo: ${error.message} (type: ${error::class.simpleName}))"
+            }
         }
     }
 }
@@ -103,6 +108,16 @@ fun <T> validateAndMapErrors(block: context(Raise<Nel<ValidationError>>) () -> T
         block = block,
         recover = { errors: Nel<ValidationError> ->
             raise(InvalidInput(errors))
+        },
+        transform = { it }
+    )
+
+context(_: Raise<WebOperationFailure>)
+fun <T> validateAndMapError(block: context(Raise<ValidationError>) () -> T): T =
+    fold(
+        block = block,
+        recover = { error: ValidationError ->
+            raise(InvalidInput(error.nel()))
         },
         transform = { it }
     )

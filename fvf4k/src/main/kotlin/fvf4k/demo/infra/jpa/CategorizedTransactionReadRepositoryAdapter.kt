@@ -10,22 +10,23 @@ import fvf4k.demo.domain.model.CategorizedTransaction
 import fvf4k.demo.domain.model.ClientId
 import fvf4k.demo.domain.model.ExpenseCategory
 import fvf4k.demo.domain.model.TransactionId
+import fvf4k.demo.domain.spi.FindBudgetsByCategory
 import fvf4k.demo.domain.spi.FindByClientIdAndExpenseCategory
 import fvf4k.demo.domain.spi.FindByTransactionId
-import fvf4k.demo.domain.spi.FindExpenseCategoriesByClientId
+import kotlin.uuid.toJavaUuid
 
 
 class CategorizedTransactionReadRepositoryAdapter(
     val jpaRepository: CategorizedTransactionJpaRepository
 ) : FindByTransactionId,
     FindByClientIdAndExpenseCategory,
-    FindExpenseCategoriesByClientId {
+    FindBudgetsByCategory {
 
     context(_: Raise<DatabaseQueryError>)
     override fun invoke(transactionId: TransactionId): CategorizedTransaction? =
         catch(
             block = {
-                jpaRepository.findByTransactionId(transactionId)?.toDomain()
+                jpaRepository.findByTransactionId(transactionId.value.toJavaUuid())?.toDomain()
             },
             catch = { exception ->
                 raise(
@@ -46,7 +47,8 @@ class CategorizedTransactionReadRepositoryAdapter(
             block = {
                 jpaRepository.findByClientIdAndExpenseCategory(clientId, expenseCategory)
                     .map {
-                        it.toDomain() }
+                        it.toDomain()
+                    }
             },
             catch = { exception ->
                 raise(
@@ -63,7 +65,7 @@ class CategorizedTransactionReadRepositoryAdapter(
     override fun invoke(clientId: ClientId): List<CategoryBudget> =
         catch(
             block = {
-                jpaRepository.findBudgetsByCategory(clientId)
+                jpaRepository.findCategoryBudgetsByClientId(clientId.value)
             },
             catch = { exception ->
                 raise(

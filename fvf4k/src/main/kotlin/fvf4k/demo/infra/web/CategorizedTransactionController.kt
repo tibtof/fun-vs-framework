@@ -1,34 +1,33 @@
 package fvf4k.demo.infra.web
 
-import arrow.core.Nel
-import arrow.core.raise.context.either
 import arrow.core.raise.context.zipOrAccumulate
-import fvf4k.demo.domain.DatabaseQueryError
-import fvf4k.demo.domain.ValidationError
+import arrow.core.raise.eagerEffect
 import fvf4k.demo.domain.api.QueryBudgetByCategory
 import fvf4k.demo.domain.api.QueryByClientIdAndExpenseCategory
-import fvf4k.demo.domain.api.QueryExpenseCategoriesByClientId
 import fvf4k.demo.domain.model.ClientId
 import fvf4k.demo.domain.model.ExpenseCategory
 import fvf4k.demo.domain.model.TransactionId
 import org.springframework.http.ResponseEntity
+import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-@RestController
-class CategorizedTransactionController<out R>(val findBy: R)
-        where R : QueryByClientIdAndExpenseCategory,
-              R : QueryExpenseCategoriesByClientId,
-              R : QueryBudgetByCategory {
+@Service
+class QueryRepository(
+    val queryByClientIdAndExpenseCategory: QueryByClientIdAndExpenseCategory,
+    val queryBudgetByCategory: QueryBudgetByCategory
+)
 
+@RestController
+class CategorizedTransactionController(val queryService: QueryRepository) {
     @GetMapping("/client/{clientId}/transactions")
-    fun getTransactionsByClientAndCategory(
+    fun getClientTransactionsByCategory(
         @PathVariable clientId: String?,
         @RequestParam expenseCategory: String?
-    ): ResponseEntity<List<CategorizedTransactionResponse>> = either {
-        val (validatedClientId, validatedCategory) = validateAndMapErrors {
+    ): ResponseEntity<*> = eagerEffect {
+        val (validClientId, validExpenseCategory) = validateAndMapErrors {
             zipOrAccumulate(
                 { ClientId(clientId) },
                 { ExpenseCategory(expenseCategory) }
@@ -36,7 +35,7 @@ class CategorizedTransactionController<out R>(val findBy: R)
         }
 
         val transactions = queryAndMapErrors {
-            findBy(validatedClientId, validatedCategory)
+            queryService.queryByClientIdAndExpenseCategory(validClientId, validExpenseCategory)
         }
 
         transactions.map { t ->
@@ -45,18 +44,24 @@ class CategorizedTransactionController<out R>(val findBy: R)
                 expenseCategory = t.expenseCategory
             )
         }
-    }.fold(
-        ifRight = { categorizedTransactions ->
-            ResponseEntity.ok(categorizedTransactions)
-        },
-        ifLeft = { error ->
-            when (error) {
-                is Nel<ValidationError> -> ResponseEntity.badRequest().build()
-                is DatabaseQueryError -> ResponseEntity.notFound().build()
-                else -> ResponseEntity.internalServerError().build()
-            }
+    }.toResponseEntity()
+
+
+    @GetMapping("/client/{clientId}/categories-budget")
+    fun getClientExpensesGroupedByCategory(
+        @PathVariable clientId: String?
+    ): ResponseEntity<*> = eagerEffect {
+        val validClientId = validateAndMapError {
+            ClientId(clientId)
         }
-    )
+
+        val categoryBudgets = queryAndMapErrors {
+            queryService.queryBudgetByCategory(validClientId)
+        }
+
+        categoryBudgets
+    }.toResponseEntity()
+
 }
 
 data class CategorizedTransactionResponse(

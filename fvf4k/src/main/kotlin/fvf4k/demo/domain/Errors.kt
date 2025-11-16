@@ -2,8 +2,6 @@ package fvf4k.demo.domain
 
 import arrow.core.NonEmptyList
 
-typealias ValidationErrors = NonEmptyList<ValidationError>
-
 sealed interface ApplicationError {
     val message: String
 }
@@ -24,6 +22,7 @@ data class DataCorruptionError(
 ) : DatabaseQueryError, ValidationError
 
 sealed interface ValidationError : ApplicationError
+typealias ValidationErrors = NonEmptyList<ValidationError>
 
 data class InvalidUuid(val uuid: String) : ValidationError {
     override val message = "Invalid UUID: '$uuid'"
@@ -39,4 +38,8 @@ data object NullMerchantCategoryCode : ValidationError {
 
 data class InvalidMerchantCategoryPattern(val mcc: String) : ValidationError {
     override val message = "Merchant category code must be exactly 4 digits. Actual value: '$mcc'"
+}
+
+data class CouldNotCategorizeTransaction(val reason: String) : ApplicationError {
+    override val message = "Could not categorize transaction: $reason"
 }

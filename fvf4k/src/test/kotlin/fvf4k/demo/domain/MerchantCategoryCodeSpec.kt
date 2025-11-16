@@ -1,0 +1,59 @@
+package fvf4k.demo.domain
+
+import arrow.core.raise.eagerEffect
+import arrow.core.raise.merge
+import arrow.core.raise.recover
+import fvf4k.demo.domain.model.MerchantCategoryCode
+import io.kotest.assertions.AssertionErrorBuilder.Companion.fail
+import io.kotest.core.spec.style.FreeSpec
+import io.kotest.matchers.shouldBe
+
+
+class MerchantCategoryCodeSpec : FreeSpec({
+
+    "should create a valid MerchantCategoryCode for a valid 4-digit code" {
+        val mcc = recover({
+            MerchantCategoryCode("1234")
+        }) { error ->
+            fail("should not get here: $error")
+        }
+
+        mcc.value shouldBe "1234"
+    }
+
+    "should be invalid when null code is provided" {
+        val error = eagerEffect {
+            MerchantCategoryCode(null)
+            fail("should not get here")
+        }.merge()
+
+        error shouldBe NullMerchantCategoryCode
+    }
+
+    "should be invalid when non-numeric code is provided" {
+        val error = eagerEffect {
+            MerchantCategoryCode("12A4")
+            fail("should not get here")
+        }.merge()
+
+        error shouldBe InvalidMerchantCategoryPattern("12A4")
+    }
+
+    "should be invalid when code is less that 4 digits" {
+        val error = eagerEffect {
+            MerchantCategoryCode("123")
+            fail("should not get here")
+        }.merge()
+
+        error shouldBe InvalidMerchantCategoryPattern("123")
+    }
+
+    "should be invalid when code is more that 4 digits" {
+        val error = eagerEffect {
+            MerchantCategoryCode("12345")
+            fail("should not get here")
+        }.merge()
+
+        error shouldBe InvalidMerchantCategoryPattern("12345")
+    }
+})

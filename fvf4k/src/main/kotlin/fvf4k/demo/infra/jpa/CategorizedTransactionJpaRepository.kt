@@ -3,16 +3,16 @@ package fvf4k.demo.infra.jpa
 import fvf4k.demo.domain.CategoryBudget
 import fvf4k.demo.domain.model.ClientId
 import fvf4k.demo.domain.model.ExpenseCategory
-import fvf4k.demo.domain.model.TransactionId
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import org.springframework.stereotype.Repository
 import java.util.*
 
-
+@Repository
 interface CategorizedTransactionJpaRepository : JpaRepository<CategorizedTransactionEntity, UUID> {
 
-    fun findByTransactionId(transactionId: TransactionId): CategorizedTransactionEntity?
+    fun findByTransactionId(transactionId: UUID): CategorizedTransactionEntity?
 
     fun findByClientIdAndExpenseCategory(
         clientId: ClientId,
@@ -27,7 +27,7 @@ interface CategorizedTransactionJpaRepository : JpaRepository<CategorizedTransac
             GROUP BY t.expenseCategory
             """
     )
-    fun findBudgetsByCategory(@Param("clientId") clientId: ClientId): List<CategoryBudget>
+    fun findCategoryBudgetsByClientId(@Param("clientId") clientId: String): List<CategoryBudget>
 
     @Query(
         """

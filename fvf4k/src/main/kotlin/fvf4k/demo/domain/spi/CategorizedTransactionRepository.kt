@@ -35,10 +35,6 @@ fun interface FindByClientIdAndExpenseCategory {
 
 fun interface FindBudgetsByCategory {
     context(_: Raise<DatabaseQueryError>)
-    operator fun invoke(): List<CategoryBudget>
-}
-
-fun interface FindExpenseCategoriesByClientId {
-    context(_: Raise<DatabaseQueryError>)
     operator fun invoke(clientId: ClientId): List<CategoryBudget>
 }
+

@@ -10,8 +10,8 @@ import fvf4k.demo.domain.spi.SaveCategorizedTransaction
 
 
 class TransactionCategorizerService(
-    private val saveTransaction: SaveCategorizedTransaction,
     private val findByTransactionId: FindByTransactionId,
+    private val saveTransaction: SaveCategorizedTransaction,
     private val merchantDirectory: MerchantDirectory
 ) : TransactionCategorizer {
     context(_: Raise<ApplicationError>)

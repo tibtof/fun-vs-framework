@@ -2,8 +2,6 @@ package fvf4k.demo.domain.api
 
 import fvf4k.demo.domain.spi.FindBudgetsByCategory
 import fvf4k.demo.domain.spi.FindByClientIdAndExpenseCategory
-import fvf4k.demo.domain.spi.FindExpenseCategoriesByClientId
 
-typealias QueryExpenseCategoriesByClientId = FindExpenseCategoriesByClientId
 typealias QueryByClientIdAndExpenseCategory = FindByClientIdAndExpenseCategory
 typealias QueryBudgetByCategory = FindBudgetsByCategory
