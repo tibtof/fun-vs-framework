@@ -1,8 +1,4 @@
-package fvf4k.demo.domain
-
-import fvf4k.demo.domain.model.Amount
-import fvf4k.demo.domain.model.ExpenseCategory
-
+package fvf4k.demo.domain.model
 
 /**
  * Represents a budget summary for a specific expense category.

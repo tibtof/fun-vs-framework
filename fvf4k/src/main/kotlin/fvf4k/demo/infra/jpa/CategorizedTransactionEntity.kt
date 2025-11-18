@@ -4,9 +4,8 @@ import arrow.core.NonEmptyList
 import arrow.core.raise.RaiseDSL
 import arrow.core.raise.context.Raise
 import arrow.core.raise.context.RaiseAccumulate
-import arrow.core.raise.context.raise
-import arrow.core.raise.recover
-import fvf4k.demo.domain.DataCorruptionError
+import arrow.core.raise.context.withError
+import fvf4k.demo.domain.failure.CategorizedTransactionCorrupted
 import fvf4k.demo.domain.model.AccountId
 import fvf4k.demo.domain.model.Amount
 import fvf4k.demo.domain.model.CategorizedTransaction
@@ -25,8 +24,6 @@ import jakarta.persistence.Table
 import java.math.BigDecimal
 import java.util.*
 import kotlin.experimental.ExperimentalTypeInference
-import kotlin.uuid.toJavaUuid
-import kotlin.uuid.toKotlinUuid
 import arrow.core.raise.zipOrAccumulate as zipOrAccumulateExt
 
 
@@ -35,48 +32,42 @@ import arrow.core.raise.zipOrAccumulate as zipOrAccumulateExt
 data class CategorizedTransactionEntity(
     @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID,
     @Column(name = "transaction_id", nullable = false) val transactionId: UUID,
-    @Column(name = "client_id", nullable = false) val clientId: String,
-    @Column(name = "account_id", nullable = false) val accountId: String,
-    @Column(name = "amount", nullable = false) val amount: BigDecimal,
-    @Column(name = "mcc", nullable = false) val mcc: String,
-    @Column(name = "expense_category", nullable = false) val expenseCategory: String
+    @Column(name = "client_id", nullable = false) val clientId: String?,
+    @Column(name = "account_id", nullable = false) val accountId: String?,
+    @Column(name = "amount", nullable = false) val amount: BigDecimal?,
+    @Column(name = "mcc", nullable = false) val mcc: String?,
+    @Column(name = "expense_category", nullable = false) val expenseCategory: String?
 )
 
-context(_: Raise<DataCorruptionError>)
+context(_: Raise<CategorizedTransactionCorrupted>)
 fun CategorizedTransactionEntity.toDomain(): CategorizedTransaction =
-    recover(
-        block = {
-            zipOrAccumulate(
-                { TransactionId(transactionId.toKotlinUuid()) },
-                { ClientId(clientId) },
-                { AccountId(accountId) },
-                { Amount(amount) },
-                { MerchantCategoryCode(mcc) },
-                { ExpenseCategory(expenseCategory) }
-            ) { validTransactionId, validClientId, validAccountId, validAmount, validMcc, validExpenseCategory ->
-                CategorizedTransaction(
-                    id = CategorizedTransactionId(id.toKotlinUuid()),
-                    transaction = Transaction(
-                        id = validTransactionId,
-                        clientId = validClientId,
-                        accountId = validAccountId,
-                        amount = validAmount,
-                        mcc = validMcc
-                    ),
-                    expenseCategory = validExpenseCategory
-                )
-            }
-        },
-        recover = { errors ->
-            raise(
-                DataCorruptionError("Corrupted CategorizedTransaction database entry", errors)
+    withError(::CategorizedTransactionCorrupted) {
+        zipOrAccumulate(
+            { TransactionId(transactionId) },
+            { ClientId(clientId) },
+            { AccountId(accountId) },
+            { Amount(amount) },
+            { MerchantCategoryCode(mcc) },
+            { ExpenseCategory(expenseCategory) }
+        ) { validTransactionId, validClientId, validAccountId, validAmount, validMcc, validExpenseCategory ->
+            CategorizedTransaction(
+                id = CategorizedTransactionId(id),
+                transaction = Transaction(
+                    id = validTransactionId,
+                    clientId = validClientId,
+                    accountId = validAccountId,
+                    amount = validAmount,
+                    mcc = validMcc
+                ),
+                expenseCategory = validExpenseCategory
             )
-        })
+        }
+    }
 
 fun CategorizedTransaction.toJpaEntity(): CategorizedTransactionEntity =
     CategorizedTransactionEntity(
-        id = this.id.value.toJavaUuid(),
-        transactionId = this.transaction.id.value.toJavaUuid(),
+        id = this.id.value,
+        transactionId = this.transaction.id.value,
         clientId = this.transaction.clientId.value,
         accountId = this.transaction.accountId.value,
         amount = this.transaction.amount.value,

@@ -1,8 +1,12 @@
 package fvf4k.demo.domain
 
+import arrow.core.left
 import arrow.core.raise.eagerEffect
+import arrow.core.raise.either
 import arrow.core.raise.merge
 import arrow.core.raise.recover
+import fvf4k.demo.domain.failure.InvalidMerchantCategoryPattern
+import fvf4k.demo.domain.failure.NullMerchantCategoryCode
 import fvf4k.demo.domain.model.MerchantCategoryCode
 import io.kotest.assertions.AssertionErrorBuilder.Companion.fail
 import io.kotest.core.spec.style.FreeSpec
@@ -22,12 +26,12 @@ class MerchantCategoryCodeSpec : FreeSpec({
     }
 
     "should be invalid when null code is provided" {
-        val error = eagerEffect {
+        val error = either {
             MerchantCategoryCode(null)
             fail("should not get here")
-        }.merge()
+        }
 
-        error shouldBe NullMerchantCategoryCode
+        error shouldBe NullMerchantCategoryCode.left()
     }
 
     "should be invalid when non-numeric code is provided" {

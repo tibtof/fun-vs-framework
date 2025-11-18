@@ -1,7 +1,7 @@
 package fvf4k.demo.infra.kafka
 
 import arrow.core.raise.context.Raise
-import fvf4k.demo.domain.ValidationError
+import fvf4k.demo.domain.failure.ValidationFailed
 import fvf4k.demo.domain.model.AccountId
 import fvf4k.demo.domain.model.Amount
 import fvf4k.demo.domain.model.ClientId
@@ -30,7 +30,7 @@ data class TransactionMessage(
     val mcc: String?,
     val amount: BigDecimal?
 ) {
-    context(_: Raise<ValidationError>)
+    context(_: Raise<ValidationFailed>)
     fun toDomain(): Transaction = Transaction(
         TransactionId(transactionId),
         ClientId(clientId),

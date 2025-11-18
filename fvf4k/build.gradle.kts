@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.kotlinToolingVersion
 
 val kotlinLoggingVersion: String by project
 val springCloudVersion: String by project
@@ -7,6 +8,7 @@ val konsistVersion: String by project
 val arrowVersion: String by project
 val wiremockTestcontainersVersion: String by project
 val kotestVersion: String by project
+val archunitVersion: String by project
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
@@ -24,7 +26,6 @@ kotlin {
     compilerOptions {
         jvmTarget = JvmTarget.JVM_24
         freeCompilerArgs.add("-Xcontext-parameters")
-        freeCompilerArgs.add("-opt-in=kotlin.uuid.ExperimentalUuidApi")
     }
 }
 
@@ -45,6 +46,8 @@ dependencies {
     implementation("io.arrow-kt:arrow-core-high-arity:$arrowVersion")
     implementation("io.arrow-kt:arrow-fx-coroutines:$arrowVersion")
 
+    implementation("com.github.f4b6a3:uuid-creator:6.1.1")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.springframework.kafka:spring-kafka-test")
@@ -58,9 +61,12 @@ dependencies {
 //    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.3.0")
     testImplementation("io.kotest:kotest-framework-engine:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("io.kotest.extensions:kotest-assertions-arrow:2.0.0")
     testImplementation("io.mockk:mockk:1.13.13")
     testImplementation("com.ninja-squad:springmockk:4.0.2")
     testImplementation("com.lemonappdev:konsist:$konsistVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinToolingVersion")
+    testImplementation("com.tngtech.archunit:archunit-junit5:${archunitVersion}")
 }
 
 dependencyManagement {
@@ -69,6 +75,6 @@ dependencyManagement {
     }
 }
 
-//tasks.withType<Test> {
-//    useJUnitPlatform()
-//}
+tasks.withType<Test> {
+    useJUnitPlatform()
+}

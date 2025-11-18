@@ -1,6 +1,6 @@
 package fvf4k.demo.infra.jpa
 
-import fvf4k.demo.domain.CategoryBudget
+import fvf4k.demo.domain.model.CategoryBudget
 import fvf4k.demo.domain.model.ClientId
 import fvf4k.demo.domain.model.ExpenseCategory
 import org.springframework.data.jpa.repository.JpaRepository
@@ -21,7 +21,7 @@ interface CategorizedTransactionJpaRepository : JpaRepository<CategorizedTransac
 
     @Query(
         """
-            SELECT new fvf4k.demo.domain.CategoryBudget(t.expenseCategory, SUM(t.amount))
+            SELECT new fvf4k.demo.domain.model.CategoryBudget(t.expenseCategory, SUM(t.amount))
             FROM CategorizedTransactionEntity t
             WHERE t.clientId = :clientId
             GROUP BY t.expenseCategory

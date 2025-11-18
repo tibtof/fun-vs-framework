@@ -3,14 +3,14 @@ package fvf4k.demo.infra.merchantdirectory
 import arrow.core.raise.catch
 import arrow.core.raise.context.Raise
 import arrow.core.raise.context.raise
-import fvf4k.demo.domain.ApplicationError
-import fvf4k.demo.domain.CouldNotCategorizeTransaction
-import fvf4k.demo.domain.MerchantDirectory
+import fvf4k.demo.domain.failure.Failure
+import fvf4k.demo.domain.failure.CouldNotCategorizeTransaction
+import fvf4k.demo.domain.spi.MerchantDirectory
 import fvf4k.demo.domain.model.ExpenseCategory
 import fvf4k.demo.domain.model.MerchantCategoryCode
 
 class MerchantDirectoryAdapter(val merchantDirectoryService: MerchantDirectoryService) : MerchantDirectory {
-    context(_: Raise<ApplicationError>)
+    context(_: Raise<Failure>)
     override fun getFor(mcc: MerchantCategoryCode): ExpenseCategory {
         val merchantInfo = catch(
             block = { merchantDirectoryService.getMerchantCategoryCode(mcc.value) },

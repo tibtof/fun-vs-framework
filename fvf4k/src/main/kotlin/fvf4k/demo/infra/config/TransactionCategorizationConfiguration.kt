@@ -1,6 +1,6 @@
 package fvf4k.demo.infra.config
 
-import fvf4k.demo.domain.MerchantDirectory
+import fvf4k.demo.domain.spi.MerchantDirectory
 import fvf4k.demo.domain.TransactionCategorizerService
 import fvf4k.demo.domain.spi.FindByTransactionId
 import fvf4k.demo.domain.spi.SaveCategorizedTransaction
