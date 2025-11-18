@@ -1,6 +1,6 @@
 package fvf4k.demo.infra.kafka
 
-import fvf4k.demo.domain.TransactionCategorizerService
+import fvf4k.demo.domain.api.CategorizeTransaction
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.annotation.EnableKafka
@@ -11,6 +11,6 @@ import org.springframework.kafka.annotation.EnableKafka
 class KafkaListenerConfiguration {
 
     @Bean
-    fun transactionKafkaListener(transactionCategorizerService: TransactionCategorizerService) =
-        TransactionKafkaListener(transactionCategorizerService)
+    fun transactionKafkaListener(categorizeTransaction: CategorizeTransaction) =
+        TransactionKafkaListener(categorizeTransaction)
 }

@@ -5,7 +5,7 @@ import fvf4k.demo.domain.failure.Failure
 import fvf4k.demo.domain.model.ExpenseCategory
 import fvf4k.demo.domain.model.MerchantCategoryCode
 
-fun interface MerchantDirectory {
+fun interface ResolveExpenseCategory {
     context(_: Raise<Failure>)
-    fun getFor(mcc: MerchantCategoryCode): ExpenseCategory
+    operator fun invoke(mcc: MerchantCategoryCode): ExpenseCategory
 }

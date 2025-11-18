@@ -1,26 +1,28 @@
-package fvf4k.demo.domain
+package fvf4k.demo.domain.api
 
 import arrow.core.raise.context.Raise
-import fvf4k.demo.domain.api.TransactionCategorizer
 import fvf4k.demo.domain.failure.Failure
 import fvf4k.demo.domain.model.CategorizedTransaction
 import fvf4k.demo.domain.model.CategorizedTransactionId
 import fvf4k.demo.domain.model.Transaction
 import fvf4k.demo.domain.spi.FindByTransactionId
-import fvf4k.demo.domain.spi.MerchantDirectory
+import fvf4k.demo.domain.spi.ResolveExpenseCategory
 import fvf4k.demo.domain.spi.SaveCategorizedTransaction
-import fvf4k.demo.infra.jpa.CategorizedTransactionWriteRepositoryAdapter
 import fvf4k.demo.infra.merchantdirectory.MerchantDirectoryConfiguration
 
+fun interface CategorizeTransaction {
+    context(_: Raise<Failure>)
+    operator fun invoke(transaction: Transaction): CategorizedTransaction
+}
 
-class TransactionCategorizerService(
+internal class TransactionCategorizerService(
     private val findByTransactionId: FindByTransactionId,
     private val saveTransaction: SaveCategorizedTransaction,
-    private val merchantDirectory: MerchantDirectory
-) : TransactionCategorizer {
+    private val resolveExpenseCategory: ResolveExpenseCategory
+) : CategorizeTransaction {
     context(_: Raise<Failure>)
-    override fun categorize(transaction: Transaction): CategorizedTransaction {
-        val expenseCategory = merchantDirectory.getFor(transaction.mcc)
+    override fun invoke(transaction: Transaction): CategorizedTransaction {
+        val expenseCategory = resolveExpenseCategory(transaction.mcc)
         val existingCategorizedTransaction = findByTransactionId(transaction.id)
 
         val categorizedTransaction = existingCategorizedTransaction?.let { existing ->
@@ -34,8 +36,4 @@ class TransactionCategorizerService(
         println(MerchantDirectoryConfiguration())
         return saveTransaction.insert(categorizedTransaction)
     }
-}
-
-fun main() {
-
 }

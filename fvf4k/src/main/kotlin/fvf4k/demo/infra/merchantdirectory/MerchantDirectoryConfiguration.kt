@@ -11,5 +11,5 @@ class MerchantDirectoryConfiguration {
 
     @Bean
     fun merchantDirectoryAdapter(merchantDirectoryService: MerchantDirectoryService) =
-        MerchantDirectoryAdapter(merchantDirectoryService)
+        ExpenseCategoryResolverAdapter(merchantDirectoryService)
 }
