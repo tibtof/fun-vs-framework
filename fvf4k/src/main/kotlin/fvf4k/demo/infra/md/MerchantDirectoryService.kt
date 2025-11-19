@@ -1,4 +1,4 @@
-package fvf4k.demo.infra.merchantdirectory
+package fvf4k.demo.infra.md
 
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping

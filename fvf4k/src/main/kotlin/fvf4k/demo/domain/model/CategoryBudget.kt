@@ -9,4 +9,4 @@ package fvf4k.demo.domain.model
  * It is primarily used as a projection in repository queries to aggregate
  * the total transaction amounts per category for a specific client.
  */
-data class CategoryBudget(val category: ExpenseCategory, val totalAmount: Amount)
+data class CategoryBudget(val category: ExpenseCategory, val totalMoney: Money)

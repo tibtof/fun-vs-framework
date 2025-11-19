@@ -4,11 +4,11 @@ import arrow.core.left
 import arrow.core.raise.eagerEffect
 import arrow.core.raise.either
 import arrow.core.raise.merge
-import arrow.core.raise.recover
 import fvf4k.demo.domain.failure.InvalidMerchantCategoryPattern
 import fvf4k.demo.domain.failure.NullMerchantCategoryCode
 import fvf4k.demo.domain.model.MerchantCategoryCode
 import io.kotest.assertions.AssertionErrorBuilder.Companion.fail
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 
@@ -16,13 +16,11 @@ import io.kotest.matchers.shouldBe
 class MerchantCategoryCodeSpec : FreeSpec({
 
     "should create a valid MerchantCategoryCode for a valid 4-digit code" {
-        val mcc = recover({
+        val mcc = either {
             MerchantCategoryCode("1234")
-        }) { error ->
-            fail("should not get here: $error")
         }
 
-        mcc.value shouldBe "1234"
+        mcc shouldBeRight { "1234 " }
     }
 
     "should be invalid when null code is provided" {

@@ -1,18 +1,21 @@
 package fvf4k.demo.infra.jpa
 
 import arrow.core.NonEmptyList
+import arrow.core.raise.ExperimentalRaiseAccumulateApi
 import arrow.core.raise.RaiseDSL
 import arrow.core.raise.context.Raise
 import arrow.core.raise.context.RaiseAccumulate
+import arrow.core.raise.context.accumulate
+import arrow.core.raise.context.accumulating
 import arrow.core.raise.context.withError
 import fvf4k.demo.domain.failure.CategorizedTransactionCorrupted
 import fvf4k.demo.domain.model.AccountId
-import fvf4k.demo.domain.model.Amount
 import fvf4k.demo.domain.model.CategorizedTransaction
 import fvf4k.demo.domain.model.CategorizedTransactionId
 import fvf4k.demo.domain.model.ClientId
 import fvf4k.demo.domain.model.ExpenseCategory
 import fvf4k.demo.domain.model.MerchantCategoryCode
+import fvf4k.demo.domain.model.Money
 import fvf4k.demo.domain.model.Transaction
 import fvf4k.demo.domain.model.TransactionId
 import jakarta.persistence.Column
@@ -35,31 +38,33 @@ data class CategorizedTransactionEntity(
     @Column(name = "client_id", nullable = false) val clientId: String?,
     @Column(name = "account_id", nullable = false) val accountId: String?,
     @Column(name = "amount", nullable = false) val amount: BigDecimal?,
+    @Column(name = "currencyCode", nullable = false) val currencyCode: String?,
     @Column(name = "mcc", nullable = false) val mcc: String?,
     @Column(name = "expense_category", nullable = false) val expenseCategory: String?
 )
 
+@OptIn(ExperimentalRaiseAccumulateApi::class)
 context(_: Raise<CategorizedTransactionCorrupted>)
 fun CategorizedTransactionEntity.toDomain(): CategorizedTransaction =
     withError(::CategorizedTransactionCorrupted) {
-        zipOrAccumulate(
-            { TransactionId(transactionId) },
-            { ClientId(clientId) },
-            { AccountId(accountId) },
-            { Amount(amount) },
-            { MerchantCategoryCode(mcc) },
-            { ExpenseCategory(expenseCategory) }
-        ) { validTransactionId, validClientId, validAccountId, validAmount, validMcc, validExpenseCategory ->
+        accumulate {
+            val validTransactionId = accumulating { TransactionId(transactionId) }
+            val validClientId = accumulating { ClientId(clientId) }
+            val validAccountId = accumulating { AccountId(accountId) }
+            val validMoney = accumulating { Money(amount, currencyCode) }
+            val validMcc = accumulating { MerchantCategoryCode(mcc) }
+            val validExpenseCategory = accumulating { ExpenseCategory(expenseCategory) }
+
             CategorizedTransaction(
                 id = CategorizedTransactionId(id),
                 transaction = Transaction(
-                    id = validTransactionId,
-                    clientId = validClientId,
-                    accountId = validAccountId,
-                    amount = validAmount,
-                    mcc = validMcc
+                    id = validTransactionId.value,
+                    clientId = validClientId.value,
+                    accountId = validAccountId.value,
+                    money = validMoney.value,
+                    mcc = validMcc.value
                 ),
-                expenseCategory = validExpenseCategory
+                expenseCategory = validExpenseCategory.value
             )
         }
     }
@@ -70,7 +75,8 @@ fun CategorizedTransaction.toJpaEntity(): CategorizedTransactionEntity =
         transactionId = this.transaction.id.value,
         clientId = this.transaction.clientId.value,
         accountId = this.transaction.accountId.value,
-        amount = this.transaction.amount.value,
+        amount = this.transaction.money.value,
+        currencyCode = this.transaction.money.currency.currencyCode,
         mcc = this.transaction.mcc.value,
         expenseCategory = this.expenseCategory.value
     )

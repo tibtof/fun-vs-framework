@@ -1,4 +1,4 @@
-package fvf4k.demo.infra.merchantdirectory
+package fvf4k.demo.infra.md
 
 import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.context.annotation.Bean

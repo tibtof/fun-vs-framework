@@ -23,6 +23,7 @@ class CategorizedTransactionEntitySpec : FreeSpec({
             clientId = "",
             accountId = null,
             amount = 100.0.toBigDecimal(),
+            currencyCode = "EUR",
             mcc = "123",
             expenseCategory = ""
         )
@@ -48,6 +49,7 @@ class CategorizedTransactionEntitySpec : FreeSpec({
             clientId = "client-123",
             accountId = "account-456",
             amount = 250.75.toBigDecimal(),
+            currencyCode = "EUR",
             mcc = "5411",
             expenseCategory = "Groceries"
         )
@@ -62,7 +64,7 @@ class CategorizedTransactionEntitySpec : FreeSpec({
         categorizedTransaction.transaction.id.value shouldBe entity.transactionId
         categorizedTransaction.transaction.clientId.value shouldBe entity.clientId
         categorizedTransaction.transaction.accountId.value shouldBe entity.accountId
-        categorizedTransaction.transaction.amount.value shouldBe entity.amount
+        categorizedTransaction.transaction.money.value shouldBe entity.amount
         categorizedTransaction.transaction.mcc.value shouldBe entity.mcc
         categorizedTransaction.expenseCategory.value shouldBe entity.expenseCategory
     }

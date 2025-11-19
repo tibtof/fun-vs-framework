@@ -1,7 +1,10 @@
 package fvf4k.demo.domain.model
 
+import arrow.core.Either
+import arrow.core.raise.catch
 import arrow.core.raise.context.Raise
 import arrow.core.raise.context.raise
+import fvf4k.demo.domain.failure.InvalidCurrencyCode
 import fvf4k.demo.domain.failure.InvalidMerchantCategoryPattern
 import fvf4k.demo.domain.failure.NullMerchantCategoryCode
 import fvf4k.demo.domain.failure.NullOrEmpty
@@ -14,7 +17,7 @@ data class Transaction(
     val id: TransactionId,
     val clientId: ClientId,
     val accountId: AccountId,
-    val amount: Amount,
+    val money: Money,
     val mcc: MerchantCategoryCode
 )
 
@@ -38,12 +41,14 @@ data class Transaction(
     }
 }
 
-@JvmInline value class Amount private constructor(val value: BigDecimal) {
+data class Money private constructor(val value: BigDecimal, val currency: Currency) {
     companion object {
         context(_: Raise<ValidationFailed>)
-        operator fun invoke(value: BigDecimal?): Amount {
+        operator fun invoke(value: BigDecimal?, currencyCode: String?): Money {
+            if (currencyCode == null || currencyCode.isEmpty()) raise(NullOrEmpty("currencyCode", currencyCode))
+            val currency = catch({ Currency.getInstance(currencyCode) }) { raise(InvalidCurrencyCode(currencyCode)) }
             if (value == null) raise(NullOrEmpty("amount", value))
-            else return Amount(value)
+            return Money(value, currency)
         }
     }
 }

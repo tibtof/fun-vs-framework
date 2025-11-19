@@ -8,13 +8,16 @@ import fvf4k.demo.domain.model.Transaction
 import fvf4k.demo.domain.spi.FindByTransactionId
 import fvf4k.demo.domain.spi.ResolveExpenseCategory
 import fvf4k.demo.domain.spi.SaveCategorizedTransaction
-import fvf4k.demo.infra.merchantdirectory.MerchantDirectoryConfiguration
+import org.springframework.stereotype.Service
+
+//import fvf4k.demo.infra.merchantdirectory.MerchantDirectoryConfiguration
 
 fun interface CategorizeTransaction {
     context(_: Raise<Failure>)
     operator fun invoke(transaction: Transaction): CategorizedTransaction
 }
 
+//@Service
 internal class TransactionCategorizerService(
     private val findByTransactionId: FindByTransactionId,
     private val saveTransaction: SaveCategorizedTransaction,
@@ -33,7 +36,6 @@ internal class TransactionCategorizerService(
             transaction = transaction,
             expenseCategory = expenseCategory
         )
-        println(MerchantDirectoryConfiguration())
-        return saveTransaction.insert(categorizedTransaction)
+        return saveTransaction(categorizedTransaction)
     }
 }

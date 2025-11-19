@@ -1,4 +1,4 @@
-package fvf4k.demo.infra.merchantdirectory
+package fvf4k.demo.infra.md
 
 import arrow.core.raise.catch
 import arrow.core.raise.context.Raise

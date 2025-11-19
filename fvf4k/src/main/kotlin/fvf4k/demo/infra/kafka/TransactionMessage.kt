@@ -3,9 +3,9 @@ package fvf4k.demo.infra.kafka
 import arrow.core.raise.context.Raise
 import fvf4k.demo.domain.failure.ValidationFailed
 import fvf4k.demo.domain.model.AccountId
-import fvf4k.demo.domain.model.Amount
 import fvf4k.demo.domain.model.ClientId
 import fvf4k.demo.domain.model.MerchantCategoryCode
+import fvf4k.demo.domain.model.Money
 import fvf4k.demo.domain.model.Transaction
 import fvf4k.demo.domain.model.TransactionId
 import java.math.BigDecimal
@@ -28,14 +28,15 @@ data class TransactionMessage(
     val accountId: String?,
     val clientId: String?,
     val mcc: String?,
-    val amount: BigDecimal?
+    val amount: BigDecimal?,
+    val currencyCode: String?
 ) {
     context(_: Raise<ValidationFailed>)
     fun toDomain(): Transaction = Transaction(
         TransactionId(transactionId),
         ClientId(clientId),
         AccountId(accountId),
-        Amount(amount),
+        Money(amount, currencyCode),
         MerchantCategoryCode(mcc)
     )
 }

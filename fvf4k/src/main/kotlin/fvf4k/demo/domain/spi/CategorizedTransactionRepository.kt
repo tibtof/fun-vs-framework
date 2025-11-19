@@ -4,6 +4,7 @@ import arrow.core.raise.context.Raise
 import fvf4k.demo.domain.failure.Failure
 import fvf4k.demo.domain.model.CategoryBudget
 import fvf4k.demo.domain.failure.QueryCategorizedTransactionFailure
+import fvf4k.demo.domain.failure.SaveCategorizedTransactionFailure
 import fvf4k.demo.domain.model.CategorizedTransaction
 import fvf4k.demo.domain.model.ClientId
 import fvf4k.demo.domain.model.ExpenseCategory
@@ -11,13 +12,8 @@ import fvf4k.demo.domain.model.TransactionId
 
 
 fun interface SaveCategorizedTransaction {
-    context(_: Raise<Failure>)
-    fun insert(transaction: CategorizedTransaction): CategorizedTransaction
-}
-
-fun interface UpdateCategorizedTransaction {
-    context(_: Raise<Failure>)
-    fun update(transaction: CategorizedTransaction): CategorizedTransaction
+    context(_: Raise<SaveCategorizedTransactionFailure>)
+    operator fun invoke(transaction: CategorizedTransaction): CategorizedTransaction
 }
 
 fun interface FindByTransactionId {
