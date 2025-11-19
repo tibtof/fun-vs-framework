@@ -9,6 +9,7 @@ val arrowVersion: String by project
 val wiremockTestcontainersVersion: String by project
 val kotestVersion: String by project
 val archunitVersion: String by project
+val mockkVersion: String by project
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
@@ -66,7 +67,8 @@ dependencies {
     testImplementation("com.ninja-squad:springmockk:4.0.2")
     testImplementation("com.lemonappdev:konsist:$konsistVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinToolingVersion")
-    testImplementation("com.tngtech.archunit:archunit-junit5:${archunitVersion}")
+    testImplementation("com.tngtech.archunit:archunit-junit5:$archunitVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
 }
 
 dependencyManagement {

@@ -30,13 +30,9 @@ data class InvalidMerchantCategoryPattern(val mcc: String) : ValidationFailed {
     override val message = "Merchant category code must be exactly 4 digits. Actual value: '$mcc'"
 }
 
-data class CouldNotCategorizeTransaction(val reason: String) : Failure {
-    override val message = "Could not categorize transaction: $reason"
-}
+sealed interface CategorizeTransactionFailure : Failure
 
-sealed interface SaveCategorizedTransactionFailure : Failure
-
-sealed interface QueryCategorizedTransactionFailure : Failure
+sealed interface QueryCategorizedTransactionFailure : CategorizeTransactionFailure
 
 data class QueryCategorizedTransactionFailed(
     override val message: String
@@ -45,7 +41,7 @@ data class QueryCategorizedTransactionFailed(
 data class CategorizedTransactionCorrupted(
     val innerErrors: ValidationFailures,
     override val message: String = "CategorizedTransaction database entry corrupted."
-) : QueryCategorizedTransactionFailure, SaveCategorizedTransactionFailure
+) : QueryCategorizedTransactionFailure, CategorizeTransactionFailure
 
 data class InvalidQueryParameters(
     val innerErrors: ValidationFailures,
@@ -54,6 +50,14 @@ data class InvalidQueryParameters(
 
 fun InvalidQueryParameter(failure: ValidationFailed) = InvalidQueryParameters(Nel.of(failure))
 
-data class UpdateError(
+data class CategorizedTransactionUpdateError(
     override val message: String
-) : SaveCategorizedTransactionFailure
+) : CategorizeTransactionFailure
+
+data class ExpenseCategoryResolutionFailed(
+    override val message: String
+) : CategorizeTransactionFailure
+
+data class CouldNotCategorizeTransaction(val reason: String) : CategorizeTransactionFailure {
+    override val message = "Could not categorize transaction: $reason"
+}

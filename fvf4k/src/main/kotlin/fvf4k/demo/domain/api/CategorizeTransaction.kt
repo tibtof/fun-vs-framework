@@ -1,19 +1,18 @@
 package fvf4k.demo.domain.api
 
 import arrow.core.raise.context.Raise
-import fvf4k.demo.domain.failure.Failure
+import fvf4k.demo.domain.failure.CategorizeTransactionFailure
 import fvf4k.demo.domain.model.CategorizedTransaction
 import fvf4k.demo.domain.model.CategorizedTransactionId
 import fvf4k.demo.domain.model.Transaction
 import fvf4k.demo.domain.spi.FindByTransactionId
 import fvf4k.demo.domain.spi.ResolveExpenseCategory
 import fvf4k.demo.domain.spi.SaveCategorizedTransaction
-import org.springframework.stereotype.Service
 
 //import fvf4k.demo.infra.merchantdirectory.MerchantDirectoryConfiguration
 
 fun interface CategorizeTransaction {
-    context(_: Raise<Failure>)
+    context(_: Raise<CategorizeTransactionFailure>)
     operator fun invoke(transaction: Transaction): CategorizedTransaction
 }
 
@@ -23,7 +22,7 @@ internal class TransactionCategorizerService(
     private val saveTransaction: SaveCategorizedTransaction,
     private val resolveExpenseCategory: ResolveExpenseCategory
 ) : CategorizeTransaction {
-    context(_: Raise<Failure>)
+    context(_: Raise<CategorizeTransactionFailure>)
     override fun invoke(transaction: Transaction): CategorizedTransaction {
         val expenseCategory = resolveExpenseCategory(transaction.mcc)
         val existingCategorizedTransaction = findByTransactionId(transaction.id)

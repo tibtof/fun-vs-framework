@@ -23,8 +23,8 @@ interface CategorizedTransactionJpaRepository : JpaRepository<CategorizedTransac
     fun findByTransactionId(transactionId: UUID): CategorizedTransactionEntity?
 
     fun findByClientIdAndExpenseCategory(
-        clientId: ClientId,
-        expenseCategory: ExpenseCategory
+        clientId: String,
+        expenseCategory: String
     ): List<CategorizedTransactionEntity>
 
     @Query(

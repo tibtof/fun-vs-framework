@@ -46,7 +46,7 @@ data class CategorizedTransactionEntity(
 @OptIn(ExperimentalRaiseAccumulateApi::class)
 context(_: Raise<CategorizedTransactionCorrupted>)
 fun CategorizedTransactionEntity.toDomain(): CategorizedTransaction =
-    withError(::CategorizedTransactionCorrupted) {
+    withError({ CategorizedTransactionCorrupted(it) }) {
         accumulate {
             val validTransactionId = accumulating { TransactionId(transactionId) }
             val validClientId = accumulating { ClientId(clientId) }
