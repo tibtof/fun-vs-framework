@@ -7,7 +7,6 @@ import arrow.core.raise.context.accumulating
 import arrow.core.raise.context.withError
 import fvf4k.demo.domain.failure.CategorizedTransactionCorrupted
 import fvf4k.demo.domain.model.CategoryBudget
-import fvf4k.demo.domain.model.ClientId
 import fvf4k.demo.domain.model.ExpenseCategory
 import fvf4k.demo.domain.model.Money
 import org.springframework.data.jpa.repository.JpaRepository
@@ -23,7 +22,7 @@ interface CategorizedTransactionJpaRepository : JpaRepository<CategorizedTransac
     fun findByTransactionId(transactionId: UUID): CategorizedTransactionEntity?
 
     fun findByClientIdAndExpenseCategory(
-        clientId: String,
+        clientId: UUID,
         expenseCategory: String
     ): List<CategorizedTransactionEntity>
 
@@ -35,7 +34,7 @@ interface CategorizedTransactionJpaRepository : JpaRepository<CategorizedTransac
             GROUP BY t.expenseCategory
             """
     )
-    fun findCategoryBudgetsByClientId(@Param("clientId") clientId: String): List<CategoryBudgetResult>
+    fun findCategoryBudgetsByClientId(@Param("clientId") clientId: UUID): List<CategoryBudgetResult>
 }
 
 data class CategoryBudgetResult(val category: String?, val amount: BigDecimal?, val currencyCode: String?)

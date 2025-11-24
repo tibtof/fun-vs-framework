@@ -15,6 +15,9 @@ import fvf4k.demo.domain.failure.QueryCategorizedTransactionFailure
 import fvf4k.demo.domain.model.ClientId
 import fvf4k.demo.domain.model.ExpenseCategory
 import fvf4k.demo.domain.model.TransactionId
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseContextualSerialization
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -58,7 +61,7 @@ class CategorizedTransactionController(val queryBy: TransactionQueryService) {
         ifRight = { ct -> ResponseEntity.ok(ct) }
     )
 
-        @GetMapping("/client/{clientId}/categories-budget")
+    @GetMapping("/client/{clientId}/categories-budget")
     fun getClientExpensesGroupedByCategory(
         @PathVariable clientId: String?
     ): ResponseEntity<*> = either {
@@ -84,9 +87,9 @@ class CategorizedTransactionController(val queryBy: TransactionQueryService) {
     )
 }
 
-data class CategorizedTransactionResponse(
-    val transactionId: TransactionId,
-    val expenseCategory: ExpenseCategory
+@Serializable data class CategorizedTransactionResponse(
+    @Contextual val transactionId: TransactionId,
+    @Contextual val expenseCategory: ExpenseCategory
 )
 
 data class FailureResponse(

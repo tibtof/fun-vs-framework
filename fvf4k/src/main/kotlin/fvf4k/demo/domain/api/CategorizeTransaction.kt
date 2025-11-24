@@ -9,21 +9,18 @@ import fvf4k.demo.domain.spi.FindByTransactionId
 import fvf4k.demo.domain.spi.ResolveExpenseCategory
 import fvf4k.demo.domain.spi.SaveCategorizedTransaction
 
-//import fvf4k.demo.infra.merchantdirectory.MerchantDirectoryConfiguration
-
 fun interface CategorizeTransaction {
     context(_: Raise<CategorizeTransactionFailure>)
-    operator fun invoke(transaction: Transaction): CategorizedTransaction
+    suspend operator fun invoke(transaction: Transaction): CategorizedTransaction
 }
 
-//@Service
 internal class TransactionCategorizerService(
     private val findByTransactionId: FindByTransactionId,
     private val saveTransaction: SaveCategorizedTransaction,
     private val resolveExpenseCategory: ResolveExpenseCategory
 ) : CategorizeTransaction {
     context(_: Raise<CategorizeTransactionFailure>)
-    override fun invoke(transaction: Transaction): CategorizedTransaction {
+    override suspend fun invoke(transaction: Transaction): CategorizedTransaction {
         val expenseCategory = resolveExpenseCategory(transaction.mcc)
         val existingCategorizedTransaction = findByTransactionId(transaction.id)
 

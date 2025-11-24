@@ -12,7 +12,9 @@ val archunitVersion: String by project
 val mockkVersion: String by project
 
 plugins {
-    id("org.jetbrains.kotlin.jvm")
+    kotlin("jvm")
+    kotlin("plugin.serialization")
+//    id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.kotlin.plugin.spring")
     id("org.springframework.boot")
     id("io.spring.dependency-management")
@@ -35,6 +37,8 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")

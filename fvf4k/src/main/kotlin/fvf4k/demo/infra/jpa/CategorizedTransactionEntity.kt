@@ -34,9 +34,9 @@ import arrow.core.raise.zipOrAccumulate as zipOrAccumulateExt
 @Entity
 data class CategorizedTransactionEntity(
     @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID,
-    @Column(name = "transaction_id", nullable = false) val transactionId: UUID,
-    @Column(name = "client_id", nullable = false) val clientId: String?,
-    @Column(name = "account_id", nullable = false) val accountId: String?,
+    @Column(name = "transaction_id", nullable = false) val transactionId: UUID?,
+    @Column(name = "client_id", nullable = false) val clientId: UUID?,
+    @Column(name = "account_id", nullable = false) val accountId: UUID?,
     @Column(name = "amount", nullable = false) val amount: BigDecimal?,
     @Column(name = "currencyCode", nullable = false) val currencyCode: String?,
     @Column(name = "mcc", nullable = false) val mcc: String?,
@@ -48,23 +48,23 @@ context(_: Raise<CategorizedTransactionCorrupted>)
 fun CategorizedTransactionEntity.toDomain(): CategorizedTransaction =
     withError({ CategorizedTransactionCorrupted(it) }) {
         accumulate {
-            val validTransactionId = accumulating { TransactionId(transactionId) }
-            val validClientId = accumulating { ClientId(clientId) }
-            val validAccountId = accumulating { AccountId(accountId) }
-            val validMoney = accumulating { Money(amount, currencyCode) }
-            val validMcc = accumulating { MerchantCategoryCode(mcc) }
-            val validExpenseCategory = accumulating { ExpenseCategory(expenseCategory) }
+            val validTransactionId by accumulating { TransactionId(transactionId) }
+            val validClientId by accumulating { ClientId(clientId) }
+            val validAccountId by accumulating { AccountId(accountId) }
+            val validMoney by accumulating { Money(amount, currencyCode) }
+            val validMcc by accumulating { MerchantCategoryCode(mcc) }
+            val validExpenseCategory by accumulating { ExpenseCategory(expenseCategory) }
 
             CategorizedTransaction(
                 id = CategorizedTransactionId(id),
                 transaction = Transaction(
-                    id = validTransactionId.value,
-                    clientId = validClientId.value,
-                    accountId = validAccountId.value,
-                    money = validMoney.value,
-                    mcc = validMcc.value
+                    id = validTransactionId,
+                    clientId = validClientId,
+                    accountId = validAccountId,
+                    money = validMoney,
+                    mcc = validMcc
                 ),
-                expenseCategory = validExpenseCategory.value
+                expenseCategory = validExpenseCategory
             )
         }
     }
@@ -80,21 +80,3 @@ fun CategorizedTransaction.toJpaEntity(): CategorizedTransactionEntity =
         mcc = this.transaction.mcc.value,
         expenseCategory = this.expenseCategory.value
     )
-
-/***
- * Temporary implementation of a higher-arity zipOrAccumulate.
- * Created a [PR \#3778](https://github.com/arrow-kt/arrow/pull/3778) in arrow-kt.
- * Remove this after the PR is merged or an alternative is available.
- */
-@OptIn(ExperimentalTypeInference::class)
-context(raise: Raise<NonEmptyList<Error>>)
-@RaiseDSL
-inline fun <Error, A, B, C, D, E, F, G> zipOrAccumulate(
-    @BuilderInference action1: context(RaiseAccumulate<Error>) () -> A,
-    @BuilderInference action2: context(RaiseAccumulate<Error>) () -> B,
-    @BuilderInference action3: context(RaiseAccumulate<Error>) () -> C,
-    @BuilderInference action4: context(RaiseAccumulate<Error>) () -> D,
-    @BuilderInference action5: context(RaiseAccumulate<Error>) () -> E,
-    @BuilderInference action6: context(RaiseAccumulate<Error>) () -> F,
-    block: (A, B, C, D, E, F) -> G
-): G = raise.zipOrAccumulateExt(action1, action2, action3, action4, action5, action6, block)

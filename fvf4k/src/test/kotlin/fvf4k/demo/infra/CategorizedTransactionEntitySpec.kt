@@ -12,6 +12,7 @@ import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import java.util.*
+import kotlin.test.fail
 
 
 class CategorizedTransactionEntitySpec : FreeSpec({
@@ -20,7 +21,7 @@ class CategorizedTransactionEntitySpec : FreeSpec({
         val entity = CategorizedTransactionEntity(
             id = UUID.randomUUID(),
             transactionId = UUID.randomUUID(),
-            clientId = "",
+            clientId = null,
             accountId = null,
             amount = 100.0.toBigDecimal(),
             currencyCode = "EUR",
@@ -34,7 +35,7 @@ class CategorizedTransactionEntitySpec : FreeSpec({
 
         result shouldBeLeft CategorizedTransactionCorrupted(
             Nel.of(
-                NullOrEmpty(property = "clientId", value = ""),
+                NullOrEmpty(property = "clientId", value = null),
                 NullOrEmpty(property = "accountId", value = null),
                 InvalidMerchantCategoryPattern("123"),
                 NullOrEmpty(property = "expenseCategory", value = "")
@@ -45,9 +46,9 @@ class CategorizedTransactionEntitySpec : FreeSpec({
     "should convert to domain model successfully when all data is valid" {
         val entity = CategorizedTransactionEntity(
             id = UUID.randomUUID(),
-            transactionId = UUID.randomUUID(),
-            clientId = "client-123",
-            accountId = "account-456",
+            transactionId = UUID.fromString("629847fd-edba-4888-933b-66c75f5d67ad"),
+            clientId = UUID.randomUUID(),
+            accountId = UUID.randomUUID(),
             amount = 250.75.toBigDecimal(),
             currencyCode = "EUR",
             mcc = "5411",
@@ -67,5 +68,9 @@ class CategorizedTransactionEntitySpec : FreeSpec({
         categorizedTransaction.transaction.money.value shouldBe entity.amount
         categorizedTransaction.transaction.mcc.value shouldBe entity.mcc
         categorizedTransaction.expenseCategory.value shouldBe entity.expenseCategory
+
+//        629847fd-edba-4888-933b-66c75f5d67ad
+//        2e228dde-c37e-458c-b969-c44a2450cde8
+//        aa3a1fbe-2738-4f84-9585-6398f0ff6038
     }
 })
