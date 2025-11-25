@@ -20,12 +20,38 @@ data class Transaction(
     val mcc: MerchantCategoryCode
 )
 
+@JvmInline value class TransactionId(val value: UUID) {
+    companion object {
+        context(_: Raise<ValidationFailed>)
+        operator fun invoke(value: String?): TransactionId {
+            if (value == null || value.isEmpty()) raise(NullOrEmpty("transactionId", value))
+            val uuid = catch({
+                UUID.fromString(value)
+            }) {
+                raise(NullOrEmpty("transactionId", "Invalid UUID format: $value"))
+            }
+            return TransactionId(uuid)
+        }
+
+        context(_: Raise<ValidationFailed>)
+        operator fun invoke(value: UUID?): TransactionId {
+            if (value == null) raise(NullOrEmpty("transactionId", value))
+            else return TransactionId(value)
+        }
+    }
+}
+
 @JvmInline value class ClientId private constructor(val value: UUID) {
     companion object {
         context(_: Raise<ValidationFailed>)
         operator fun invoke(value: String?): ClientId {
             if (value == null || value.isEmpty()) raise(NullOrEmpty("clientId", value))
-            else return ClientId(value)
+            val uuid = catch({
+                UUID.fromString(value)
+            }) {
+                raise(NullOrEmpty("clientId", "Invalid UUID format: $value"))
+            }
+            return ClientId(uuid)
         }
 
         context(_: Raise<ValidationFailed>)
@@ -36,12 +62,17 @@ data class Transaction(
     }
 }
 
-@JvmInline value class AccountId private constructor(val value: UUID) {
+@JvmInline value class AccountId(val value: UUID) {
     companion object {
         context(_: Raise<ValidationFailed>)
         operator fun invoke(value: String?): AccountId {
             if (value == null || value.isEmpty()) raise(NullOrEmpty("accountId", value))
-            else return AccountId(value)
+            val uuid = catch({
+                UUID.fromString(value)
+            }) {
+                raise(NullOrEmpty("accountId", "Invalid UUID format: $value"))
+            }
+            return AccountId(uuid)
         }
 
         context(_: Raise<ValidationFailed>)
@@ -60,22 +91,6 @@ data class Money private constructor(val value: BigDecimal, val currency: Curren
             val currency = catch({ Currency.getInstance(currencyCode) }) { raise(InvalidCurrencyCode(currencyCode)) }
             if (value == null) raise(NullOrEmpty("amount", value))
             return Money(value, currency)
-        }
-    }
-}
-
-@JvmInline value class TransactionId(val value: UUID) {
-    companion object {
-        context(_: Raise<ValidationFailed>)
-        operator fun invoke(value: String?): TransactionId {
-            if (value == null || value.isEmpty()) raise(NullOrEmpty("transactionId", value))
-            else return TransactionId(value)
-        }
-
-        context(_: Raise<ValidationFailed>)
-        operator fun invoke(value: UUID?): TransactionId {
-            if (value == null) raise(NullOrEmpty("transactionId", value))
-            else return TransactionId(value)
         }
     }
 }

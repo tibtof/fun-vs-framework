@@ -33,7 +33,7 @@ import arrow.core.raise.zipOrAccumulate as zipOrAccumulateExt
 @Table(name = "categorized_transaction")
 @Entity
 data class CategorizedTransactionEntity(
-    @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID,
+    @Id val id: UUID,
     @Column(name = "transaction_id", nullable = false) val transactionId: UUID?,
     @Column(name = "client_id", nullable = false) val clientId: UUID?,
     @Column(name = "account_id", nullable = false) val accountId: UUID?,

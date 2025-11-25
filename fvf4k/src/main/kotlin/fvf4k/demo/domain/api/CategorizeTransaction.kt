@@ -11,7 +11,7 @@ import fvf4k.demo.domain.spi.SaveCategorizedTransaction
 
 fun interface CategorizeTransaction {
     context(_: Raise<CategorizeTransactionFailure>)
-    suspend operator fun invoke(transaction: Transaction): CategorizedTransaction
+    operator fun invoke(transaction: Transaction): CategorizedTransaction
 }
 
 internal class TransactionCategorizerService(
@@ -20,7 +20,7 @@ internal class TransactionCategorizerService(
     private val resolveExpenseCategory: ResolveExpenseCategory
 ) : CategorizeTransaction {
     context(_: Raise<CategorizeTransactionFailure>)
-    override suspend fun invoke(transaction: Transaction): CategorizedTransaction {
+    override fun invoke(transaction: Transaction): CategorizedTransaction {
         val expenseCategory = resolveExpenseCategory(transaction.mcc)
         val existingCategorizedTransaction = findByTransactionId(transaction.id)
 

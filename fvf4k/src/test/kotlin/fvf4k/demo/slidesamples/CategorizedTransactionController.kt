@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-@Service
+// @Service - Commented out to avoid bean conflicts during tests
 class QueryRepository(
     val queryByClientIdAndExpenseCategory: QueryByClientIdAndExpenseCategory,
     val queryBudgetByCategory: QueryBudgetByCategory

@@ -16,13 +16,23 @@ private val log = KotlinLogging.logger {}
 class TransactionKafkaListener(val categorizeTransaction: CategorizeTransaction) {
 
     @KafkaListener(topics = ["transactions"], groupId = "fvf4k-transactions-group")
-    context(_: Raise<ValidationFailed>)
     fun listen(transaction: TransactionMessage) {
         log.info { "Received transaction $transaction" }
         either {
-            categorizeTransaction(transaction.toDomain())
+            val domainTransactionResult = either {
+                transaction.toDomain()
+            }
+            
+            domainTransactionResult.fold(
+                ifLeft = { validationError ->
+                    log.error { "Validation error: $validationError" }
+                    return@listen
+                },
+                ifRight = { domainTransaction ->
+                    categorizeTransaction(domainTransaction)
+                }
+            )
         }.onLeft { error ->
-            println(CategorizedTransactionResponse(TransactionId(UUID.randomUUID()), ExpenseCategory("a")))
             log.error { "Error during categorization: $error" }
         }
     }

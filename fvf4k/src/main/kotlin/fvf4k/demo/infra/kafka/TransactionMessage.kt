@@ -1,7 +1,8 @@
 package fvf4k.demo.infra.kafka
 
 import arrow.core.raise.context.Raise
-import fvf4k.demo.domain.failure.Failure
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import fvf4k.demo.domain.failure.ValidationFailed
 import fvf4k.demo.domain.model.AccountId
 import fvf4k.demo.domain.model.ClientId
@@ -24,20 +25,20 @@ import java.math.BigDecimal
  * - clientId: The ID of the client performing the transaction.
  * - mcc: The Merchant Category Code representing the type of business where the transaction occurred.
  * - amount: The monetary value of the transaction. */
-data class TransactionMessage(
-    val transactionId: String?,
-    val accountId: String?,
-    val clientId: String?,
-    val mcc: String?,
-    val amount: BigDecimal?,
-    val currencyCode: String?
-) {
-    context(_: Raise<Failure>)
-    fun toDomain(): Transaction = Transaction(
-        TransactionId(transactionId),
-        ClientId(clientId),
-        AccountId(accountId),
-        Money(amount, currencyCode),
-        MerchantCategoryCode(mcc)
-    )
-}
+data class TransactionMessage @JsonCreator constructor(
+    @JsonProperty("transactionId") val transactionId: String?,
+    @JsonProperty("accountId") val accountId: String?,
+    @JsonProperty("clientId") val clientId: String?,
+    @JsonProperty("mcc") val mcc: String?,
+    @JsonProperty("amount") val amount: BigDecimal?,
+    @JsonProperty("currencyCode") val currencyCode: String?
+)
+
+context(_: Raise<ValidationFailed>)
+fun TransactionMessage.toDomain(): Transaction = Transaction(
+    TransactionId(transactionId),
+    ClientId(clientId),
+    AccountId(accountId),
+    Money(amount, currencyCode),
+    MerchantCategoryCode(mcc)
+)
