@@ -4,7 +4,7 @@ import arrow.core.raise.catch
 import arrow.core.raise.context.Raise
 import arrow.core.raise.context.raise
 import fvf4k.demo.domain.failure.CategorizeTransactionFailure
-import fvf4k.demo.domain.failure.CategorizedTransactionUpdateError
+import fvf4k.demo.domain.failure.CategorizedTransactionUpdateFailed
 import fvf4k.demo.domain.model.CategorizedTransaction
 import fvf4k.demo.domain.spi.SaveCategorizedTransaction
 
@@ -18,6 +18,6 @@ class CategorizedTransactionWriteRepositoryAdapter(
         catch({
             jpaRepository.save(transaction.toJpaEntity()).toDomain()
         }) {
-            raise(CategorizedTransactionUpdateError("Could not save TransactionCategory: ${it.message}"))
+            raise(CategorizedTransactionUpdateFailed("Could not save TransactionCategory: ${it.message}"))
         }
 }

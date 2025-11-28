@@ -18,4 +18,4 @@ data class InvalidQueryParameters(
     override val message: String = "Invalid query parameters."
 ) : QueryCategorizedTransactionFailure
 
-fun InvalidQueryParameter(failure: ValidationFailed) = InvalidQueryParameters(Nel.of(failure))
+fun InvalidQueryParameter(failure: ValidationFailure) = InvalidQueryParameters(Nel.of(failure))

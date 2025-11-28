@@ -1,12 +1,5 @@
 package fvf4k.demo.slidesamples
 
-import arrow.core.raise.context.Raise
-import arrow.core.raise.context.raise
-import fvf4k.demo.domain.failure.Failure
-import fvf4k.demo.domain.failure.InvalidMerchantCategoryPattern
-import fvf4k.demo.domain.failure.NullMerchantCategoryCode
-import fvf4k.demo.domain.failure.ValidationFailed
-import fvf4k.demo.domain.failure.ValidationFailures
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe

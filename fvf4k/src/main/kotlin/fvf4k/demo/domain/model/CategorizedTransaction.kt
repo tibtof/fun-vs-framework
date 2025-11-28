@@ -4,7 +4,7 @@ import arrow.core.raise.context.Raise
 import arrow.core.raise.context.raise
 import com.github.f4b6a3.uuid.UuidCreator
 import fvf4k.demo.domain.failure.NullOrEmpty
-import fvf4k.demo.domain.failure.ValidationFailed
+import fvf4k.demo.domain.failure.ValidationFailure
 import java.util.*
 
 data class CategorizedTransaction(
@@ -33,7 +33,7 @@ data class CategorizedTransaction(
 
 @JvmInline value class ExpenseCategory private constructor(val value: String) {
     companion object {
-        context(_: Raise<ValidationFailed>)
+        context(_: Raise<ValidationFailure>)
         operator fun invoke(value: String?): ExpenseCategory {
 //            println(MerchantDirectoryConfiguration())
             if (value == null || value.isEmpty()) raise(NullOrEmpty("expenseCategory", value))

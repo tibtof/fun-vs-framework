@@ -1,15 +1,9 @@
 package fvf4k.demo.infra.kafka
 
-import arrow.core.raise.Raise
 import arrow.core.raise.either
 import fvf4k.demo.domain.api.CategorizeTransaction
-import fvf4k.demo.domain.failure.ValidationFailed
-import fvf4k.demo.domain.model.ExpenseCategory
-import fvf4k.demo.domain.model.TransactionId
-import fvf4k.demo.infra.web.CategorizedTransactionResponse
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.kafka.annotation.KafkaListener
-import java.util.*
 
 private val log = KotlinLogging.logger {}
 

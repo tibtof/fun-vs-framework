@@ -3,7 +3,7 @@ package fvf4k.demo.infra.kafka
 import arrow.core.raise.context.Raise
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import fvf4k.demo.domain.failure.ValidationFailed
+import fvf4k.demo.domain.failure.ValidationFailure
 import fvf4k.demo.domain.model.AccountId
 import fvf4k.demo.domain.model.ClientId
 import fvf4k.demo.domain.model.MerchantCategoryCode
@@ -34,7 +34,7 @@ data class TransactionMessage @JsonCreator constructor(
     @JsonProperty("currencyCode") val currencyCode: String?
 )
 
-context(_: Raise<ValidationFailed>)
+context(_: Raise<ValidationFailure>)
 fun TransactionMessage.toDomain(): Transaction = Transaction(
     TransactionId(transactionId),
     ClientId(clientId),
