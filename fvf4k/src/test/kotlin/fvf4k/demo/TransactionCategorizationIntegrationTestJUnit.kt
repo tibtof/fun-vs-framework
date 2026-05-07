@@ -1,6 +1,6 @@
 package fvf4k.demo
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.json.JsonMapper
 import fvf4k.demo.infra.jpa.CategorizedTransactionJpaRepository
 import fvf4k.demo.infra.kafka.TransactionMessage
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -218,7 +218,7 @@ class TransactionCategorizationIntegrationTestJUnit {
             put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java.name)
             put(ProducerConfig.ACKS_CONFIG, "all")
         }).use { producer ->
-            val objectMapper = ObjectMapper()
+            val objectMapper = JsonMapper.builder().build()
             val json = objectMapper.writeValueAsString(message)
             val record = ProducerRecord<String, String>("transactions", message.transactionId, json)
             producer.send(record).get()

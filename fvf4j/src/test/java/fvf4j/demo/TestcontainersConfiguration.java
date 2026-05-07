@@ -11,13 +11,13 @@ import org.testcontainers.utility.DockerImageName;
 class TestcontainersConfiguration {
 
     @Bean
-    @ServiceConnection
+    @ServiceConnection(name = "kafka")
     ConfluentKafkaContainer kafkaContainer() {
         return new ConfluentKafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:8.1.0"));
     }
 
     @Bean
-    @ServiceConnection
+    @ServiceConnection(name = "postgres")
     @SuppressWarnings("resource")
     PostgreSQLContainer<?> postgresContainer() {
         return new PostgreSQLContainer<>("postgres:18")

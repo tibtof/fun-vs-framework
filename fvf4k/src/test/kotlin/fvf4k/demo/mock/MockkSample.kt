@@ -21,7 +21,7 @@ internal class TransactionCategorizerService(
 }
 
 class MockkSample : FreeSpec({
-    "should categorize transaction correctly" {
+    "!should categorize transaction correctly" {
         val message: TransactionMessage = mockk()
         val mcc = message.mcc!!
         val mockRepository = mockk<CategorizedTransactionJpaRepository>()

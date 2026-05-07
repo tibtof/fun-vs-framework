@@ -26,7 +26,7 @@ class MerchantCategoryCodeSpec : FreeSpec({
             MerchantCategoryCode("1234")
         }
 
-        mcc shouldBeRight { "1234 " }
+        mcc.shouldBeRight()
     }
 
     "should be invalid when null code is provided" {
