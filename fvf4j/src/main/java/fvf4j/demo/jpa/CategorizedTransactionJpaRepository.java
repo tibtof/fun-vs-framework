@@ -2,7 +2,6 @@ package fvf4j.demo.jpa;
 
 
 import fvf4j.demo.domain.CategoryBudget;
-import fvf4j.demo.domain.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,7 +28,7 @@ public interface CategorizedTransactionJpaRepository extends JpaRepository<Categ
             WHERE t.clientId = :clientId
             GROUP BY t.expenseCategory
             """)
-    List<CategoryBudget> findBudgetsByCategory(@Param("clientId") String clientId);
+    List<CategoryBudget> findBudgetsGroupedByCategory(@Param("clientId") String clientId);
 
 
     @Query("""

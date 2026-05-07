@@ -1,4 +1,5 @@
 HELP.md
+.tmp/
 .gradle
 .kotlin
 build/

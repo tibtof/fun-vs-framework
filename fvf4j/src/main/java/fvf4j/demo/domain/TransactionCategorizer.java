@@ -1,8 +1,8 @@
 package fvf4j.demo.domain;
 
 
-import fvf4j.demo.domain.CategorizedTransactionPorts.FindByTransactionId;
-import fvf4j.demo.domain.CategorizedTransactionPorts.SaveCategorizedTransaction;
+import fvf4j.demo.domain.CategorizedTransactionRepositoryPorts.FindByTransactionId;
+import fvf4j.demo.domain.CategorizedTransactionRepositoryPorts.SaveCategorizedTransaction;
 
 public interface TransactionCategorizer {
 

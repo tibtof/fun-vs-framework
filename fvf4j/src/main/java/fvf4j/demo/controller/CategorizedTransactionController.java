@@ -2,9 +2,9 @@ package fvf4j.demo.controller;
 
 
 import fvf4j.demo.domain.CategorizedTransaction.ExpenseCategory;
-import fvf4j.demo.domain.CategorizedTransactionPorts.FindBudgetsByCategory;
-import fvf4j.demo.domain.CategorizedTransactionPorts.FindByClientIdAndExpenseCategory;
-import fvf4j.demo.domain.CategorizedTransactionPorts.FindExpenseCategoriesByClient;
+import fvf4j.demo.domain.CategorizedTransactionRepositoryPorts.FindBudgetsByCategory;
+import fvf4j.demo.domain.CategorizedTransactionRepositoryPorts.FindByClientIdAndExpenseCategory;
+import fvf4j.demo.domain.CategorizedTransactionRepositoryPorts.FindExpenseCategoriesByClient;
 import fvf4j.demo.domain.CategoryBudget;
 import fvf4j.demo.domain.Transaction.ClientId;
 import org.springframework.web.bind.annotation.GetMapping;

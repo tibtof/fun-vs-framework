@@ -3,7 +3,7 @@ package fvf4j.demo.jpa;
 
 import fvf4j.demo.domain.CategorizedTransaction;
 import fvf4j.demo.domain.CategorizedTransaction.ExpenseCategory;
-import fvf4j.demo.domain.CategorizedTransactionPorts.*;
+import fvf4j.demo.domain.CategorizedTransactionRepositoryPorts.*;
 import fvf4j.demo.domain.CategoryBudget;
 import fvf4j.demo.domain.Transaction.ClientId;
 import fvf4j.demo.domain.Transaction.TransactionId;
@@ -18,7 +18,8 @@ public class CategorizedTransactionRepositoryAdapter implements
         FindByTransactionId,
         FindBudgetsByCategory,
         FindByClientIdAndExpenseCategory,
-        FindExpenseCategoriesByClient {
+        FindExpenseCategoriesByClient,
+        CategorizedTransactionRepository {
 
     private final CategorizedTransactionJpaRepository jpaRepository;
 
@@ -57,6 +58,6 @@ public class CategorizedTransactionRepositoryAdapter implements
 
     @Override
     public List<CategoryBudget> findBudgetsByCategory(ClientId clientId) {
-        return jpaRepository.findBudgetsByCategory(clientId.value());
+        return jpaRepository.findBudgetsGroupedByCategory(clientId.value());
     }
 }
